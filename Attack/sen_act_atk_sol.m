@@ -1,0 +1,67 @@
+clc,clear all;close all;
+
+N=10000; %Total number of Iterations
+dt=0.001;%Step Length
+
+a=100;  %Amplitude of attack signal
+s=1;
+k=300;
+
+x1(1)=1;
+x2(1)=2;
+x3(1)=3;
+
+x_act=0;
+
+w1(1)=1;
+w2(1)=2;
+w3(1)=3;
+
+for i=1:N
+    
+    if i>=6000 
+        x_act=a*exp(i*dt);
+    else
+        x_act=0;
+    end
+
+%     if i>=3000 
+%         x_act=a*sin(i*dt);
+%     else
+%         x_act=0;
+%     end
+
+%     if i==3000 
+%         x_act=a;
+%     else
+%         x_act=0;
+%     end
+
+%     if i>=3000 
+%         x_act=a;
+%     else
+%         x_act=0;
+%     end
+%     if i>=3000 
+%         x1(i)=x1(i)+a*sin(i*dt);
+%     end
+
+%     if i==1000 
+%         x1(i)=x1(i)+a*exp(i*dt);
+%     end
+    
+    
+    x1(i+1)=x1(i)+dt*((-1)*(x1(i)-x2(i))-k*(x1(i)-w1(i))+x_act);
+    x2(i+1)=x2(i)+dt*((-1)*(2*x2(i)-x1(i)-x3(i))-k*(x2(i)-w2(i)));
+    x3(i+1)=x3(i)+dt*((-1)*(x3(i)-x2(i))-k*(x3(i)-w3(i)));
+    
+    
+    w1(i+1)=w1(i)+dt*((-1)*(w1(i)-w2(i)));
+    w2(i+1)=w2(i)+dt*((-1)*(2*w2(i)-w1(i)-w3(i)));
+    w3(i+1)=w3(i)+dt*((-1)*(w3(i)-w2(i)));
+  
+end
+
+plot(x1);hold on;plot(x2);plot(x3)
+legend('Node 1','Node 2','Node 3')
+
