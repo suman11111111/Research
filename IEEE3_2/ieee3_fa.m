@@ -117,6 +117,9 @@ for i=1:s_pol(1)
     end
 end
 
+%Impulse Free
+im_free=(rank([E J;zeros(17,17) E])==size(J,1)+rank(E));
+
 %I-Controllable
 
 i_cont=(rank([E zeros(17,17) zeros(17,4);J E B])==rank(E)+size(J,1));
@@ -126,3 +129,11 @@ im_cont=(rank([E J B;zeros(17,17) E zeros(17,4)])==rank(E)+rank([E J B]));
 adm=(rank([s*E-J B E*xeq])==rank([s*E-J B]));
 adm_ar=(rank([E J B])==rank([s*E-J B]));
 
+tspan=[0 600];
+options=odeset('Mass',E,'MStateDependence','none','MassSingular','yes');
+[t,x]=ode23t(@(t,x) des(J,B,x),tspan,xeq,options);
+
+function dae=des(J,B,x)
+    u=[1;1;1.63;0.85];
+    dae=J*x+B*u;
+end
