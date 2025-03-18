@@ -35,13 +35,13 @@ B11=-0.25;
 B12=0.1;
 B13=0.15;
 
-B21=0;                              %Network Parameter Attack
-B22=0;
-B23=0;
+B21=0.1;
+B22=-0.2;
+B23=0.1;
 
-B31=0.15;
-B32=0.1;
-B33=-0.25; 
+B31=0;
+B32=0;
+B33=0; 
 
 P1=1.63;
 P2=0.85;
@@ -89,17 +89,13 @@ f=@(x)[(-x(1)-(Xd1-Xd_dash1)*x(8)+Efd1);
 % x0=zeros(17,1);
 x0=[-0.0477;-0.5021;0.0298;-0.0964;-0.4354;1;1;0.466;-0.1046;-0.05189;-0.3966;1;1;1;0;0.0093;-0.0217];
 options = optimset('Algorithm', 'levenberg-marquardt','TolFun', 1e-6, 'TolX', 1e-6,'MaxIter', 10000000, 'MaxFunEvals', 1000000);
-[xeq,fval,flag,out]=fsolve(f,x0,options);
-
-%Sensor Spoofing Attack
-xeq(16)=-0.9175;
+[xeq,fval,flag,out,J]=fsolve(f,x0,options);
 
 %Defining of Symbolic Variables for each bus
 syms omega_s
-syms Eq1 Ed1 omega1 Id1 Iq1 theta1 V1 Efd1 H1 TM1 D1 Tdo1 Tqo1 Rs1 Xq1 Xd1 Xd_dash1 Xq1 Xq_dash1 B11 B12 B13
-syms Eq2 Ed2 delt2 omega2 Id2 Iq2 theta2 V2 Efd2 H2 TM2 D2 Tdo2 Tqo2 Rs2 Xq2 Xd2 Xd_dash2 Xq2 Xq_dash2 B21 B22 B23
-syms theta3 V3 B31 B32 B33
-
+syms Eq1 Ed1 delt1 omega1 Id1 Iq1 P1 Q1 theta1 V1 Efd1 H1 TM1 D1 Tdo1 Tqo1 Rs1 Xq1 Xd1 Xd_dash1 Xq1 Xq_dash1 B11 B12 B13
+syms Eq2 Ed2 delt2 omega2 Id2 Iq2 P2 Q2 theta2 V2 Efd2 H2 TM2 D2 Tdo2 Tqo2 Rs2 Xq2 Xd2 Xd_dash2 Xq2 Xq_dash2 B21 B22 B23
+syms P3 Q3 theta3 V3 B31 B32 B33
 
 %Differential Equation for 1st bus
 f1(1)=(-Eq1-(Xd1-Xd_dash1)*Id1+Efd1);
@@ -116,7 +112,7 @@ f1(7)=Id1*V1*cos(-theta1)-Iq1*V1*sin(-theta1)+Q1-B11*V1*V1*cos(theta1-theta1)-B1
 x1=[Eq1 Ed1 omega1 Iq1 Id1 V1 theta1];
 
 %Input States for 1st bus
-u1=[Efd1 TM1];
+u1=[Efd1 TM1 P1 Q1];
 
 %Differential Equation for 2nd bus
 f2(1)=(-Eq2-(Xd2-Xd_dash2)*Id2+Efd2);
@@ -134,14 +130,18 @@ f2(8)=Id2*V2*cos(delt2-theta2)-Iq2*V2*sin(delt2-theta2)+Q2-B21*V2*V1*cos(theta2-
 x2=[Eq2 Ed2 delt2 omega2 Iq2 Id2 V2 theta2];
 
 %Input States for 2nd bus
-u2=[Efd2 TM2];
+u2=[Efd2 TM2 P2 Q2];
 
-%Algebraic Equation for 4th bus
+%Algebraic Equation for 3rd bus
 f3(1)=P3-B31*V3*V1*sin(theta3-theta1)-B32*V3*V2*sin(theta3-theta2)-B33*V3*V3*sin(theta3-theta3);
 f3(2)=Q3-B31*V3*V1*cos(theta3-theta1)-B32*V3*V2*cos(theta3-theta2)-B33*V3*V3*cos(theta3-theta3);
 
-%States for 4th bus
+%States for 3rd bus
 x3=[V3 theta3];
+
+%Input States for 3rd bus
+u3=[P3 Q3];
+
 
 %Drifts
 fd=[f1(1),f2(1),f1(2),f2(2),f2(3),f1(3),f2(4)];
@@ -150,7 +150,7 @@ xd=[x1(1),x2(1),x1(2),x2(2),x2(3),x1(3),x2(4)];
 fa=[f1(4),f2(5),f1(5),f2(6),f1(6),f2(7),f3(1),f1(7),f2(8),f3(2)];
 xa=[x1(4),x2(5),x1(5),x2(6),x1(6),x2(7),x3(1),x1(7),x2(8),x3(2)];
 
-u=[u1(1),u2(1),u1(2),u2(2)];
+u=[u1(1),u2(1),u1(2),u2(2),u1(3),u2(3),u3(1),u1(4),u2(4),u3(2)];
 
 
 %Jacobians for A and B
@@ -230,10 +230,10 @@ B1xs=[B11 B12 B13];
 B1x=[-0.25 0.1 0.15];
 
 B2xs=[B22 B21 B23];
-B2x=[0 0 0];
+B2x=[0.1 -0.2 0.1];
 
 B3s=[B33 B31 B32];
-B3=[-0.25 0.15 0.1];
+B3=[0 0 0];
 
 E=subs(E,[Tdos Tqos Hs omega_s],[Tdo Tqo H 1]);
 E=double(E);
@@ -258,107 +258,10 @@ end
 im_free=(rank([E A;zeros(17,17) E])==size(A,1)+rank(E));
 
 %I-Controllable
-i_cont=(rank([E zeros(17,17) zeros(17,4);A E B])==rank(E)+size(A,1));
-im_cont=(rank([E A B;zeros(17,17) E zeros(17,4)])==rank(E)+rank([E A B]));
+i_cont=(rank([E zeros(17,17) zeros(17,10);A E B])==rank(E)+size(A,1));
+im_cont=(rank([E A B;zeros(17,17) E zeros(17,10)])==rank(E)+rank([E A B]));
 
 %Admissibility
 adm=(rank([s*E-A B E*xeq])==rank([s*E-A B]));
 adm_ar=(rank([E A B])==rank([s*E-A B]));
 
-tspan=[0 600];
-options=odeset('Mass',E,'MStateDependence','none','MassSingular','yes');
-[t,x]=ode23t(@(t,x) des(A,B,x),tspan,xeq,options);
-
-function dae=des(A,B,x)
-    u=[1;1;1.63;0.85];
-    dae=A*x+B*u;
-end
-
-
-figure()
-plot(t,x(:,1),'r-','LineWidth', 3),hold on,plot(t,x(:,2),'k-','LineWidth', 3)
-xlabel('Time t \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-ylabel('q-axis EMF: E_q(t) \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-grid on
-legendObj = legend({'\Delta E_{q_1}','\Delta E_{q_2}'}, 'FontSize', 28, 'LineWidth', 1.5);
-legendBox = findobj(legendObj, 'Type', 'Patch');
-set(legendBox, 'LineWidth', 3)
-set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold') 
-hold off
-
-figure()
-plot(t,x(:,3),'r-','LineWidth', 3),hold on,plot(t,x(:,4),'k-','LineWidth', 3)
-xlabel('Time t \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-ylabel('d-axis EMF: E_d(t) \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-grid on
-legendObj = legend({'\Delta E_{d_1}','\Delta E_{d_2}'}, 'FontSize', 28, 'LineWidth', 1.5);
-legendBox = findobj(legendObj, 'Type', 'Patch');
-set(legendBox, 'LineWidth', 3)
-set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold') 
-hold off
-
-figure()
-plot(t,x(:,5),'r-','LineWidth', 3)
-xlabel('Time t \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-ylabel('Rotor Angle: \delta(t) \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-grid on
-legendObj = legend({'\Delta \delta_2'}, 'FontSize', 28, 'LineWidth', 1.5);
-legendBox = findobj(legendObj, 'Type', 'Patch');
-set(legendBox, 'LineWidth', 3)
-set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold') 
-hold off
-
-figure()
-plot(t,x(:,6),'r-','LineWidth', 3),hold on,plot(t,x(:,7),'k-','LineWidth', 3)
-xlabel('Time t \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-ylabel('Rotor Anglular Velocity: \omega(t) \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-grid on
-legendObj = legend({'\Delta \omega_1','\Delta \omega_2'}, 'FontSize', 28, 'LineWidth', 1.5);
-legendBox = findobj(legendObj, 'Type', 'Patch');
-set(legendBox, 'LineWidth', 3)
-set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold')
-hold off
-
-figure()
-plot(t,x(:,8),'r-','LineWidth', 3),hold on,plot(t,x(:,9),'k-','LineWidth', 3)
-xlabel('Time t \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-ylabel('d-axis Current: I_d(t) \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-grid on
-legendObj = legend({'\Delta I_{d_1}','\Delta I_{d_2}'}, 'FontSize', 28, 'LineWidth', 1.5);
-legendBox = findobj(legendObj, 'Type', 'Patch');
-set(legendBox, 'LineWidth', 3)
-set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold')
-hold off
-
-figure()
-plot(t,x(:,10),'r-','LineWidth', 3),hold on,plot(t,x(:,11),'k-','LineWidth', 3)
-xlabel('Time t \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-ylabel('q-axis Current: I_q(t) \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-grid on
-legendObj = legend({'\Delta I_{q_1}','\Delta I_{q_2}'}, 'FontSize', 28, 'LineWidth', 1.5);
-legendBox = findobj(legendObj, 'Type', 'Patch');
-set(legendBox, 'LineWidth', 3)
-set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold')
-hold off
-
-figure()
-plot(t,x(:,12),'r-','LineWidth', 3),hold on,plot(t,x(:,13),'k-','LineWidth', 3),plot(t,x(:,14),'b-','LineWidth', 3)
-xlabel('Time t \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-ylabel('Voltage: V(t) \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-grid on
-legendObj = legend({'\Delta V_1','\Delta V_2','\Delta V_3'}, 'FontSize', 28, 'LineWidth', 1.5);
-legendBox = findobj(legendObj, 'Type', 'Patch');
-set(legendBox, 'LineWidth', 3)
-set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold')
-hold off
-
-figure()
-plot(t,x(:,15),'r-','LineWidth', 3),hold on,plot(t,x(:,16),'k-','LineWidth', 3),plot(t,x(:,17),'b-','LineWidth', 3)
-xlabel('Time t \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-ylabel('Voltage Phase: \theta(t) \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-grid on
-legendObj = legend({'\Delta \theta_1','\Delta \theta_2','\Delta \theta_3'}, 'FontSize', 28, 'LineWidth', 1.5);
-legendBox = findobj(legendObj, 'Type', 'Patch');
-set(legendBox, 'LineWidth', 3)
-set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold')
-hold off

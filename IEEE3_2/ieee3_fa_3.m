@@ -31,9 +31,9 @@ Tdo2=5.89;
 Tqo1=0.535; 
 Tqo2=0.6;
 
-B11=-0.25;
-B12=0.1;
-B13=0.15;
+B11=0;                              %Network Parameter Attack
+B12=0;
+B13=0;
 
 B21=0;                              %Network Parameter Attack
 B22=0;
@@ -92,7 +92,10 @@ options = optimset('Algorithm', 'levenberg-marquardt','TolFun', 1e-6, 'TolX', 1e
 [xeq,fval,flag,out]=fsolve(f,x0,options);
 
 %Sensor Spoofing Attack
-xeq(16)=-0.9175;
+xeq(15)=xeq(16)-xeq(5);
+xeq(8)=xeq(9);
+xeq(10)=xeq(11);
+xeq(12)=xeq(13);
 
 %Defining of Symbolic Variables for each bus
 syms omega_s
@@ -227,7 +230,7 @@ thetas=[theta1 theta2 theta3];
 theta=[xeq(15) xeq(16) xeq(17)];
 
 B1xs=[B11 B12 B13];
-B1x=[-0.25 0.1 0.15];
+B1x=[0 0 0];
 
 B2xs=[B22 B21 B23];
 B2x=[0 0 0];
@@ -273,92 +276,3 @@ function dae=des(A,B,x)
     u=[1;1;1.63;0.85];
     dae=A*x+B*u;
 end
-
-
-figure()
-plot(t,x(:,1),'r-','LineWidth', 3),hold on,plot(t,x(:,2),'k-','LineWidth', 3)
-xlabel('Time t \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-ylabel('q-axis EMF: E_q(t) \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-grid on
-legendObj = legend({'\Delta E_{q_1}','\Delta E_{q_2}'}, 'FontSize', 28, 'LineWidth', 1.5);
-legendBox = findobj(legendObj, 'Type', 'Patch');
-set(legendBox, 'LineWidth', 3)
-set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold') 
-hold off
-
-figure()
-plot(t,x(:,3),'r-','LineWidth', 3),hold on,plot(t,x(:,4),'k-','LineWidth', 3)
-xlabel('Time t \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-ylabel('d-axis EMF: E_d(t) \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-grid on
-legendObj = legend({'\Delta E_{d_1}','\Delta E_{d_2}'}, 'FontSize', 28, 'LineWidth', 1.5);
-legendBox = findobj(legendObj, 'Type', 'Patch');
-set(legendBox, 'LineWidth', 3)
-set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold') 
-hold off
-
-figure()
-plot(t,x(:,5),'r-','LineWidth', 3)
-xlabel('Time t \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-ylabel('Rotor Angle: \delta(t) \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-grid on
-legendObj = legend({'\Delta \delta_2'}, 'FontSize', 28, 'LineWidth', 1.5);
-legendBox = findobj(legendObj, 'Type', 'Patch');
-set(legendBox, 'LineWidth', 3)
-set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold') 
-hold off
-
-figure()
-plot(t,x(:,6),'r-','LineWidth', 3),hold on,plot(t,x(:,7),'k-','LineWidth', 3)
-xlabel('Time t \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-ylabel('Rotor Anglular Velocity: \omega(t) \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-grid on
-legendObj = legend({'\Delta \omega_1','\Delta \omega_2'}, 'FontSize', 28, 'LineWidth', 1.5);
-legendBox = findobj(legendObj, 'Type', 'Patch');
-set(legendBox, 'LineWidth', 3)
-set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold')
-hold off
-
-figure()
-plot(t,x(:,8),'r-','LineWidth', 3),hold on,plot(t,x(:,9),'k-','LineWidth', 3)
-xlabel('Time t \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-ylabel('d-axis Current: I_d(t) \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-grid on
-legendObj = legend({'\Delta I_{d_1}','\Delta I_{d_2}'}, 'FontSize', 28, 'LineWidth', 1.5);
-legendBox = findobj(legendObj, 'Type', 'Patch');
-set(legendBox, 'LineWidth', 3)
-set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold')
-hold off
-
-figure()
-plot(t,x(:,10),'r-','LineWidth', 3),hold on,plot(t,x(:,11),'k-','LineWidth', 3)
-xlabel('Time t \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-ylabel('q-axis Current: I_q(t) \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-grid on
-legendObj = legend({'\Delta I_{q_1}','\Delta I_{q_2}'}, 'FontSize', 28, 'LineWidth', 1.5);
-legendBox = findobj(legendObj, 'Type', 'Patch');
-set(legendBox, 'LineWidth', 3)
-set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold')
-hold off
-
-figure()
-plot(t,x(:,12),'r-','LineWidth', 3),hold on,plot(t,x(:,13),'k-','LineWidth', 3),plot(t,x(:,14),'b-','LineWidth', 3)
-xlabel('Time t \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-ylabel('Voltage: V(t) \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-grid on
-legendObj = legend({'\Delta V_1','\Delta V_2','\Delta V_3'}, 'FontSize', 28, 'LineWidth', 1.5);
-legendBox = findobj(legendObj, 'Type', 'Patch');
-set(legendBox, 'LineWidth', 3)
-set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold')
-hold off
-
-figure()
-plot(t,x(:,15),'r-','LineWidth', 3),hold on,plot(t,x(:,16),'k-','LineWidth', 3),plot(t,x(:,17),'b-','LineWidth', 3)
-xlabel('Time t \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-ylabel('Voltage Phase: \theta(t) \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
-grid on
-legendObj = legend({'\Delta \theta_1','\Delta \theta_2','\Delta \theta_3'}, 'FontSize', 28, 'LineWidth', 1.5);
-legendBox = findobj(legendObj, 'Type', 'Patch');
-set(legendBox, 'LineWidth', 3)
-set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold')
-hold off
