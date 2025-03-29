@@ -5,7 +5,7 @@ syms s;
 ta=300;
 tf=350;
 
-alpha=pi/3;
+alpha=deg2rad(45);
 gamma=1-(2*alpha)/pi-sin(2*alpha)/pi;
 
 [E,A1,B,xeq1,fin_pol1]=stmat(0,1,gamma);
@@ -26,7 +26,7 @@ adm_ar=(rank([E A2 B])==rank([s*E-A2 B]));
 dec=(rank([s*E'-A2' eye(17)])==size(A2,1));
 
 tspan=[0 1000];
-options=odeset('Mass',E,'MStateDependence','none','MassSingular','yes',RelTol=10e-2);
+options=odeset('Mass',E,'MStateDependence','none','MassSingular','yes',RelTol=10e-1);
 [t,x]=ode23t(@(t,x) des(A1,A2,B,x,t,ta,tf),tspan,xeq1,options);
 
 figure()
@@ -171,9 +171,9 @@ function [E,A,B,xeq,fin_pol]=stmat(t,ta,gamma)
         B32=0.1;
         B33=-0.25;
     else
-        B31=0.15*gamma;
-        B32=0.1;
-        B33=-0.25*gamma;
+        B31=0.15-gamma;
+        B32=0.1-gamma;
+        B33=-0.25-gamma;
     end
     
     P1=1.63;

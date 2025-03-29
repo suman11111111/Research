@@ -108,8 +108,8 @@ E(7,7)=(2*H2)/omega;
 
 
 %B Matrix
-B = [1,0,0,0;0,1,0,0;0,0,0,0;0,0,0,0;0,0,0,0;0,0,1,0;0,0,0,1;0,0,0,0;0,0,0,0;0,0,0,0;0,0,0,0;0,0,0,0;0,0,0,0;0,0,0,0;0,0,0,0;0,0,0,0;0,0,0,0];
-
+B=[1 0 0 0 0 0;0 1 0 0 0 0;0 0 0 0 0 0;0 0 0 0 0 0;0 0 0 0 0 0;0 0 1 0 0 0;0 0 0 1 0 0;0 0 0 0 0 0;0 0 0 0 0 0;0 0 0 0 0 0;0 0 0 0 0 0;0 0 0 0 0 0;0 0 0 0 0 0;0 0 0 0 1 0;0 0 0 0 0 0;0 0 0 0 0 0;0 0 0 0 0 1];
+        
 J=J(1:17,:);
 pol=eig(J,E);
 s_pol=size(pol);
@@ -124,10 +124,10 @@ end
 
 tspan=[0 600];
 options=odeset('Mass',E,'MStateDependence','none','MassSingular','yes');
-[t,x]=ode23t(@(t,x) des(J,B,x,xeq),tspan,xeq,options);
+[t,x]=ode23t(@(t,x) des(J,B,x),tspan,xeq,options);
 
-function dae=des(J,B,x,xeq)
-    u=[1;1;1.63;0.85];
+function dae=des(J,B,x)
+    u=[1;1;1.63;0.85;0;0];
     dae=J*x+B*u;
 end
 

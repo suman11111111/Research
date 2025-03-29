@@ -124,9 +124,9 @@ end
 
 tspan=[0 600];
 options=odeset('Mass',E,'MStateDependence','none','MassSingular','yes');
-[t,x]=ode23t(@(t,x) des(J,B,x,xeq),tspan,xeq,options);
+[t,x]=ode23t(@(t,x) des(J,B,x),tspan,xeq,options);
 
-function dae=des(J,B,x,xeq)
+function dae=des(J,B,x)
     u=[1;1;1.63;0.85];
     dae=J*x+B*u;
 end
