@@ -3,13 +3,9 @@ clc,clear,close all
 syms s;
 
 ta=300;
-tf=350;
 
-alpha=deg2rad(30);
-gamma=1-(2*alpha)/pi-sin(2*alpha)/pi;
-
-[E,A1,B,xeq1,fin_pol1]=stmat(0,1,gamma);
-[~,A2,~,xeq2,fin_pol2]=stmat(2,1,gamma);
+[E,A1,B,xeq1,fin_pol1]=stmat(0,100);
+[~,A2,~,xeq2,fin_pol2]=stmat(200,100);
 
 %Impulse Free
 im_free=(rank([E A2;zeros(17,17) E])==size(A2,1)+rank(E));
@@ -25,9 +21,9 @@ adm_ar=(rank([E A2 B])==rank([s*E-A2 B]));
 %Detectibility
 dec=(rank([s*E'-A2' eye(17)])==size(A2,1));
 
-tspan=[0 1000];
-options=odeset('Mass',E,'MStateDependence','none','MassSingular','yes',RelTol=10e-2);
-[t,x]=ode23t(@(t,x) des(A1,A2,B,x,t,ta,tf),tspan,xeq1,options);
+tspan=[0 500];
+options=odeset('Mass',E,'MStateDependence','none','MassSingular','yes');
+[t,x]=ode23t(@(t,x) des(A1,A2,B,x,t,ta),tspan,xeq1,options);
 
 figure()
 plot(t,x(:,1),'r-','LineWidth', 3),hold on,plot(t,x(:,2),'k-','LineWidth', 3)
@@ -117,9 +113,9 @@ set(legendBox, 'LineWidth', 3)
 set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold')
 hold off
 
-function dae=des(A1,A2,B,x,t,ta,tf)   
+function dae=des(A1,A2,B,x,t,ta)   
     v=[1;1;1.63;0.85;0;0];
-    if t>ta && t<tf
+    if t>ta
         A=A2;
     else
         A=A1;
@@ -127,7 +123,7 @@ function dae=des(A1,A2,B,x,t,ta,tf)
     dae=A*x+B*v;
 end
 
-function [E,A,B,xeq,fin_pol]=stmat(t,ta,gamma)
+function [E,A,B,xeq,fin_pol]=stmat(t,ta)
 
     omega=1;
 
@@ -171,9 +167,9 @@ function [E,A,B,xeq,fin_pol]=stmat(t,ta,gamma)
         B32=0.1;
         B33=-0.25;
     else
-        B31=0.15-gamma;
-        B32=0.1-gamma;
-        B33=-0.25-gamma;
+        B31=0;
+        B32=0;
+        B33=0;
     end
     
     P1=1.63;

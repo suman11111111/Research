@@ -5,7 +5,7 @@ syms s;
 ta=300;
 tf=350;
 
-alpha=deg2rad(30);
+alpha=deg2rad(20);
 gamma=1-(2*alpha)/pi-sin(2*alpha)/pi;
 
 [E,A1,B,xeq1,fin_pol1]=stmat(0,1,gamma);
@@ -118,7 +118,7 @@ set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold')
 hold off
 
 function dae=des(A1,A2,B,x,t,ta,tf)   
-    v=[1;1;1.63;0.85;0;0];
+    v=[1;1;0.45;0.15;0;0];
     if t>ta && t<tf
         A=A2;
     else
@@ -176,14 +176,14 @@ function [E,A,B,xeq,fin_pol]=stmat(t,ta,gamma)
         B33=-0.25-gamma;
     end
     
-    P1=1.63;
-    P2=0.85;
+    P1=0.05;
+    P2=0.4;
     
-    Q1=0.0067;
-    Q2=-0.109;
+    Q1=0.0468;
+    Q2=0.0806;
     
-    P3=2.48;
-    Q3=-0.1023;
+    P3=0.45;
+    Q3=0.15;
     
     Efd1=0;
     Efd2=0;
@@ -219,7 +219,7 @@ function [E,A,B,xeq,fin_pol]=stmat(t,ta,gamma)
     
         %Solve
         x0=[-0.0477;-0.5021;0.0298;-0.0964;-0.4354;1;1;0.466;-0.1046;-0.05189;-0.3966;1;1;1;0;0.0093;-0.0217];
-        options = optimset('Algorithm', 'levenberg-marquardt','TolFun', 1e-6, 'TolX', 1e-6,'MaxIter', 10000000, 'MaxFunEvals', 1000000);
+        options = optimset('Algorithm', 'levenberg-marquardt','TolFun', 1e1, 'TolX', 1e1,'MaxIter', 10000000, 'MaxFunEvals', 1000000);
         [xeq,~,~,~,A]=fsolve(f,x0,options);
         A=A(1:17,:);
     
