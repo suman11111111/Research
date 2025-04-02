@@ -85,7 +85,7 @@ f=@(x)[(-x(1)-(Xd1-Xd_dash1)*x(8)+Efd1);
 %Solve
 x0=[-0.0477;-0.5021;0.0298;-0.0964;-0.1;1;1;0.466;-0.1046;-0.05189;-0.3966;1;1;1;0;0.0093;-0.0217];
 % x0=[0.5507;0.6753;0.1444;0.7732;-0.3199;1.0066;1.0190;-0.3766;-0.5256;-0.2182;-0.7555;0.8593;0.8323;-0.2582;-0.1103;-0.9214;1.1619];
-options = optimset('Algorithm', 'levenberg-marquardt','TolFun', 1e1, 'TolX', 1e1,'MaxIter', 10000000, 'MaxFunEvals', 1000000);
+options = optimset('Algorithm', 'levenberg-marquardt','TolFun', 1e1, 'TolX', 1e-3,'MaxIter', 10000000, 'MaxFunEvals', 1000000);
 [xeq,fval,flag,out,J]=fsolve(f,x0,options);
 
 
