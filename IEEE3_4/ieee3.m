@@ -135,11 +135,6 @@ tspan=[0 1000];
 options=odeset('Mass',E,'MStateDependence','none','MassSingular','yes');
 [t,x]=ode23t(@(t,x) des(J,B,x),tspan,xeq,options);
 
-function dae=des(J,B,x)
-    u=[1;1;0.45;0.15];
-    dae=J*x+B*u;
-end
-
 figure()
 plot(t,x(:,1),'r-','LineWidth', 3),hold on,plot(t,x(:,2),'k-','LineWidth', 3)
 xlabel('Time t \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
@@ -227,3 +222,8 @@ legendBox = findobj(legendObj, 'Type', 'Patch');
 set(legendBox, 'LineWidth', 3)
 set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold')
 hold off
+
+function dae=des(J,B,x)
+    u=[1;1;0.45;0.15];
+    dae=J*x+B*u;
+end
