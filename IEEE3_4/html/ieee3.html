@@ -9,7 +9,7 @@ To make changes, update the MATLAB code and republish this document.
 <title>ieee3</title>
 <meta name="generator" content="MATLAB 24.1">
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
-<meta name="DC.date" content="2025-04-02">
+<meta name="DC.date" content="2025-04-03">
 <meta name="DC.source" content="ieee3.m">
 <style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
@@ -122,8 +122,8 @@ B33=-0.25;
 P1=0.05;
 P2=0.4;
 
-Q1=0.0468;
-Q2=0.0806;
+Q1=0.0651;
+Q2=0.0999;
 
 P3=0.45;
 Q3=0.15;
@@ -155,14 +155,32 @@ f=@(x)[(-x(1)-(Xd1-Xd_dash1)*x(8)+Efd1);
     x(8)*x(12)*cos(-x(15))-x(10)*x(12)*sin(-x(15))+Q1-B11*x(12)*x(12)*cos(x(15)-x(15))-B12*x(12)*x(13)*cos(x(15)-x(16))-B13*x(12)*x(14)*cos(x(15)-x(17));
     x(9)*x(13)*cos(x(5)-x(16))-x(11)*x(12)*sin(x(5)-x(16))+Q2-B21*x(13)*x(12)*cos(x(16)-x(15))-B22*x(13)*x(13)*cos(x(16)-x(16))-B23*x(13)*x(14)*cos(x(16)-x(17));
     Q3-B31*x(14)*x(12)*cos(x(17)-x(15))-B32*x(14)*x(13)*cos(x(17)-x(16))-B33*x(14)*x(14)*cos(x(17)-x(17));
-    x(12)-1;
-    x(13)-1;
-    x(6)-1;
-    x(7)-1];
+    ];
 
 <span class="comment">%Solve</span>
-x0=[-0.0477;-0.5021;0.0298;-0.0964;-0.1;1;1;0.466;-0.1046;-0.05189;-0.3966;1;1;1;0;0.0093;-0.0217];
-options = optimset(<span class="string">'Algorithm'</span>, <span class="string">'levenberg-marquardt'</span>,<span class="string">'TolFun'</span>, 1e1, <span class="string">'TolX'</span>, 1e1,<span class="string">'MaxIter'</span>, 10000000, <span class="string">'MaxFunEvals'</span>, 1000000);
+<span class="comment">% x0=[-0.0477;-0.5021;0.0298;-0.0964;-0.1;1;1;0.466;-0.1046;-0.05189;-0.3966;1;1;0.9905;0;0.0093;-0.0217];</span>
+<span class="comment">% x0=[0.5578;0.6824;0.1449;0.7732;-0.3199;1.0066;1.0190;-0.3766;-0.5256;-0.2182;-0.7555;0.8593;0.8323;-0.2582;-0.1103;-0.9214;1.1619];</span>
+<span class="comment">% x0=[0.5317;0.5279;0.1030;0.3444;-0.6823;1.0348;1.0428;-0.4491;-0.4305;-0.1106;-0.2897;0.7993;0.8699;1.3620;-0.1760;-1.1634;0.4228];</span>
+<span class="comment">% x0=[0.5367;0.5894;0.1054;0.2811;-0.6998;1.0384;1.0575;-0.4599;-0.4783;-0.0563;-0.2478;0.8008;0.8795;0.6597;-0.2416;-1.1153;0.7872];</span>
+x0=[0.5376
+    0.5996
+    0.0842
+    0.2628
+   -0.6867
+    0.72
+    0.6993
+   -0.4508
+   -0.4814
+   -0.0408
+   -0.2352
+    0.7960
+    0.8740
+    0.5401
+   -0.1934
+   -1.0919
+    0.8442];
+
+options = optimset(<span class="string">'Algorithm'</span>, <span class="string">'trust-region-dogleg'</span>,<span class="string">'TolFun'</span>, 1e-1, <span class="string">'TolX'</span>, 1e-3,<span class="string">'MaxIter'</span>, 10000000, <span class="string">'MaxFunEvals'</span>, 1000000);
 [xeq,fval,flag,out,J]=fsolve(f,x0,options);
 
 
@@ -192,14 +210,9 @@ fin_pol=[];
     <span class="keyword">end</span>
 <span class="keyword">end</span>
 
-tspan=[0 300];
+tspan=[0 1000];
 options=odeset(<span class="string">'Mass'</span>,E,<span class="string">'MStateDependence'</span>,<span class="string">'none'</span>,<span class="string">'MassSingular'</span>,<span class="string">'yes'</span>);
 [t,x]=ode23t(@(t,x) des(J,B,x),tspan,xeq,options);
-
-<span class="keyword">function</span> dae=des(J,B,x)
-    u=[1;1;0.45;0.15];
-    dae=J*x+B*u;
-<span class="keyword">end</span>
 
 figure()
 plot(t,x(:,1),<span class="string">'r-'</span>,<span class="string">'LineWidth'</span>, 3),hold <span class="string">on</span>,plot(t,x(:,2),<span class="string">'k-'</span>,<span class="string">'LineWidth'</span>, 3)
@@ -288,13 +301,18 @@ legendBox = findobj(legendObj, <span class="string">'Type'</span>, <span class="
 set(legendBox, <span class="string">'LineWidth'</span>, 3)
 set(gca, <span class="string">'LineWidth'</span>, 3, <span class="string">'FontSize'</span>, 28, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
 hold <span class="string">off</span>
+
+<span class="keyword">function</span> dae=des(J,B,x)
+    u=[1;1;0.45;0.15];
+    dae=J*x+B*u;
+<span class="keyword">end</span>
 </pre>
 <pre class="codeoutput">
-Equation solved, solver stalled.
+Equation solved.
 
-fsolve stopped because the relative size of the current step is less than the
-value of the step size tolerance and the vector of function values
-is near zero as measured by the value of the function tolerance.
+fsolve completed because the vector of function values is near zero
+as measured by the value of the function tolerance, and
+the problem appears regular as measured by the gradient.
 
 </pre>
 <img vspace="5" hspace="5" src="ieee3_01.png" alt=""> <img vspace="5" hspace="5" src="ieee3_02.png" alt=""> <img vspace="5" hspace="5" src="ieee3_03.png" alt=""> <img vspace="5" hspace="5" src="ieee3_04.png" alt=""> <img vspace="5" hspace="5" src="ieee3_05.png" alt=""> <img vspace="5" hspace="5" src="ieee3_06.png" alt=""> <img vspace="5" hspace="5" src="ieee3_07.png" alt=""> <img vspace="5" hspace="5" src="ieee3_08.png" alt=""> <p class="footer">
@@ -351,8 +369,8 @@ B33=-0.25;
 P1=0.05;
 P2=0.4;
 
-Q1=0.0468;
-Q2=0.0806;
+Q1=0.0651;
+Q2=0.0999;
 
 P3=0.45;
 Q3=0.15;
@@ -384,14 +402,32 @@ f=@(x)[(-x(1)-(Xd1-Xd_dash1)*x(8)+Efd1);
     x(8)*x(12)*cos(-x(15))-x(10)*x(12)*sin(-x(15))+Q1-B11*x(12)*x(12)*cos(x(15)-x(15))-B12*x(12)*x(13)*cos(x(15)-x(16))-B13*x(12)*x(14)*cos(x(15)-x(17));
     x(9)*x(13)*cos(x(5)-x(16))-x(11)*x(12)*sin(x(5)-x(16))+Q2-B21*x(13)*x(12)*cos(x(16)-x(15))-B22*x(13)*x(13)*cos(x(16)-x(16))-B23*x(13)*x(14)*cos(x(16)-x(17));
     Q3-B31*x(14)*x(12)*cos(x(17)-x(15))-B32*x(14)*x(13)*cos(x(17)-x(16))-B33*x(14)*x(14)*cos(x(17)-x(17));
-    x(12)-1;
-    x(13)-1;
-    x(6)-1;
-    x(7)-1];
+    ];
 
 %Solve
-x0=[-0.0477;-0.5021;0.0298;-0.0964;-0.1;1;1;0.466;-0.1046;-0.05189;-0.3966;1;1;1;0;0.0093;-0.0217];
-options = optimset('Algorithm', 'levenberg-marquardt','TolFun', 1e1, 'TolX', 1e1,'MaxIter', 10000000, 'MaxFunEvals', 1000000);
+% x0=[-0.0477;-0.5021;0.0298;-0.0964;-0.1;1;1;0.466;-0.1046;-0.05189;-0.3966;1;1;0.9905;0;0.0093;-0.0217];
+% x0=[0.5578;0.6824;0.1449;0.7732;-0.3199;1.0066;1.0190;-0.3766;-0.5256;-0.2182;-0.7555;0.8593;0.8323;-0.2582;-0.1103;-0.9214;1.1619];
+% x0=[0.5317;0.5279;0.1030;0.3444;-0.6823;1.0348;1.0428;-0.4491;-0.4305;-0.1106;-0.2897;0.7993;0.8699;1.3620;-0.1760;-1.1634;0.4228];
+% x0=[0.5367;0.5894;0.1054;0.2811;-0.6998;1.0384;1.0575;-0.4599;-0.4783;-0.0563;-0.2478;0.8008;0.8795;0.6597;-0.2416;-1.1153;0.7872];
+x0=[0.5376
+    0.5996
+    0.0842
+    0.2628
+   -0.6867
+    0.72
+    0.6993
+   -0.4508
+   -0.4814
+   -0.0408
+   -0.2352
+    0.7960
+    0.8740
+    0.5401
+   -0.1934
+   -1.0919
+    0.8442];
+
+options = optimset('Algorithm', 'trust-region-dogleg','TolFun', 1e-1, 'TolX', 1e-3,'MaxIter', 10000000, 'MaxFunEvals', 1000000);
 [xeq,fval,flag,out,J]=fsolve(f,x0,options);
 
 
@@ -421,14 +457,9 @@ for i=1:s_pol(1)
     end
 end
 
-tspan=[0 300];
+tspan=[0 1000];
 options=odeset('Mass',E,'MStateDependence','none','MassSingular','yes');
 [t,x]=ode23t(@(t,x) des(J,B,x),tspan,xeq,options);
-
-function dae=des(J,B,x)
-    u=[1;1;0.45;0.15];
-    dae=J*x+B*u;
-end
 
 figure()
 plot(t,x(:,1),'r-','LineWidth', 3),hold on,plot(t,x(:,2),'k-','LineWidth', 3)
@@ -517,6 +548,11 @@ legendBox = findobj(legendObj, 'Type', 'Patch');
 set(legendBox, 'LineWidth', 3)
 set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold')
 hold off
+
+function dae=des(J,B,x)
+    u=[1;1;0.45;0.15];
+    dae=J*x+B*u;
+end
 ##### SOURCE END #####
 -->
 </body>
