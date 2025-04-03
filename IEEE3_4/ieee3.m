@@ -76,7 +76,8 @@ f=@(x)[(-x(1)-(Xd1-Xd_dash1)*x(8)+Efd1);
     P3-B31*x(14)*x(12)*sin(x(17)-x(15))-B32*x(14)*x(13)*sin(x(17)-x(16))-B33*x(14)*x(14)*sin(x(17)-x(17));
     x(8)*x(12)*cos(-x(15))-x(10)*x(12)*sin(-x(15))+Q1-B11*x(12)*x(12)*cos(x(15)-x(15))-B12*x(12)*x(13)*cos(x(15)-x(16))-B13*x(12)*x(14)*cos(x(15)-x(17));
     x(9)*x(13)*cos(x(5)-x(16))-x(11)*x(12)*sin(x(5)-x(16))+Q2-B21*x(13)*x(12)*cos(x(16)-x(15))-B22*x(13)*x(13)*cos(x(16)-x(16))-B23*x(13)*x(14)*cos(x(16)-x(17));
-    Q3-B31*x(14)*x(12)*cos(x(17)-x(15))-B32*x(14)*x(13)*cos(x(17)-x(16))-B33*x(14)*x(14)*cos(x(17)-x(17));];
+    Q3-B31*x(14)*x(12)*cos(x(17)-x(15))-B32*x(14)*x(13)*cos(x(17)-x(16))-B33*x(14)*x(14)*cos(x(17)-x(17));
+    ];
 
 %Solve
 % x0=[-0.0477;-0.5021;0.0298;-0.0964;-0.1;1;1;0.466;-0.1046;-0.05189;-0.3966;1;1;0.9905;0;0.0093;-0.0217];
@@ -101,7 +102,7 @@ x0=[0.5376
    -1.0919
     0.8442];
 
-options = optimset('Algorithm', 'trust-region-dogleg','TolFun', 1e-1, 'TolX', 1e-6,'MaxIter', 10000000, 'MaxFunEvals', 1000000);
+options = optimset('Algorithm', 'trust-region-dogleg','TolFun', 1e-1, 'TolX', 1e-3,'MaxIter', 10000000, 'MaxFunEvals', 1000000);
 [xeq,fval,flag,out,J]=fsolve(f,x0,options);
 
 
