@@ -1,0 +1,337 @@
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd"><article xml:base="file:///C:/Users/DELL/Documents/GitHub/Research/IEEE_6/html/"><!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+--><section><title/><programlisting>clc,clear,close <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">all</mwsh:strings>
+
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">%Ref Angular Frequency</mwsh:comments>
+omega_ref=1;
+
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">%Field Axis Emf</mwsh:comments>
+Efd1=0.8;
+Efd2=0.8;
+
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">%Mechanical Power Input</mwsh:comments>
+TM1=0.2;
+TM2=0.25;
+
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">%Inertia</mwsh:comments>
+H1=6.4;
+H2=3.01;
+
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">%Damping</mwsh:comments>
+D1=0.2;
+D2=0.2;
+
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">%Stator Resistance</mwsh:comments>
+Rs1=0;
+Rs2=0;
+
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">%daxis Stator Reactance</mwsh:comments>
+Xd1=0.8958;
+Xd2=1.3125;
+
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">%qaxis Stator Reactance</mwsh:comments>
+Xq1=0.8645;
+Xq2=1.2578;
+
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">%daxis Stator Transient Reactance</mwsh:comments>
+Xd_dash1=0.1198;
+Xd_dash2=0.1813;
+
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">%qaxis Stator Transient Reactance</mwsh:comments>
+Xq_dash1=0.1969;
+Xq_dash2=0.25;
+
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">%Time Constant of d-axis</mwsh:comments>
+Tdo1=6;
+Tdo2=5.89;
+
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">%Time Constant of q-axis</mwsh:comments>
+Tqo1=0.535;
+Tqo2=0.6;
+
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">%B-Bus Matrix</mwsh:comments>
+B=[-0.25 0.1 0.15;0.1 -0.2 0.1;0.15 0.1 -0.25];
+
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">% %Active Power Demand</mwsh:comments>
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">% P1=0.2;</mwsh:comments>
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">% P2=0.25;</mwsh:comments>
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">% P3=0.45;</mwsh:comments>
+
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">%Reactive Power Demand</mwsh:comments>
+Q1=0.1194;
+Q2=0.1304;
+Q3=0.15;
+
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">% Initialization of states</mwsh:comments>
+
+eq1_0=-0.1864;
+eq2_0=-0.3179;
+ed1_0=0.0217;
+ed2_0=0.0273;
+delta1_0=-0.1622;
+delta2_0=-0.0279;
+omega1_0=1;
+omega2_0=1;
+id1_0=-0.2080;
+id2_0=-0.2672;
+iq1_0=0.0325;
+iq2_0=-0.0271;
+v1_0=1;
+v2_0=1;
+v3_0=0.9905;
+theta1_0=0;
+theta2_0=-0.0014;
+theta3_0=-0.0281;
+efd1_0=0;
+efd2_0=0;
+tm1_0=0.2;
+tm2_0=0.25;
+
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">% Initial guess vector</mwsh:comments>
+x0=[eq1_0;eq2_0;ed1_0;ed2_0;delta1_0;delta2_0;omega1_0;omega2_0;id1_0;id2_0;iq1_0;iq2_0;v1_0;v2_0;v3_0;theta1_0;theta2_0;theta3_0;efd1_0;efd2_0;tm1_0;tm2_0];
+
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">%Defining Function with 'states' as the input variable</mwsh:comments>
+f=@(x)[-x(1)-(Xd1-Xd_dash1)*x(9)+x(19);
+       -x(2)-(Xd2-Xd_dash2)*x(10)+x(20);
+       -x(3)+(Xq1-Xq_dash1)*x(11);
+       -x(4)+(Xq2-Xq_dash2)*x(12);
+       x(7)-omega_ref;
+       x(8)-omega_ref;
+       x(21)-x(3)*x(9)-x(1)*x(11)-(Xq_dash1-Xd_dash1)*x(9)*x(11)-D1*(x(7)-omega_ref);
+       x(22)-x(4)*x(10)-x(2)*x(12)-(Xq_dash2-Xd_dash2)*x(10)*x(12)-D2*(x(8)-omega_ref);
+       x(3)-x(13)*cos(x(16))*sin(x(5))+x(13)*sin(x(16))*cos(x(5))-Rs1*x(9)+Xq_dash1*x(11);
+       x(4)-x(14)*cos(x(17))*sin(x(6))+x(14)*sin(x(17))*cos(x(6))-Rs2*x(10)+Xq_dash2*x(12);
+       x(1)-x(13)*cos(x(16))*cos(x(5))-x(13)*sin(x(16))*sin(x(5))-Rs1*x(11)-Xd_dash1*x(9);
+       x(2)-x(14)*cos(x(17))*cos(x(6))-x(14)*sin(x(17))*sin(x(6))-Rs2*x(12)-Xd_dash2*x(10);
+       x(9)*x(13)*sin(x(5)-x(16))+x(11)*x(13)*cos(x(5)-x(16))+x(21)-x(13)*x(13)*B(1,1)*sin(x(16)-x(16))-x(13)*x(14)*B(1,2)*sin(x(16)-x(17))-x(13)*x(15)*B(1,3)*sin(x(16)-x(18));
+       x(10)*x(14)*sin(x(6)-x(17))+x(12)*x(14)*cos(x(6)-x(17))+x(22)-x(14)*x(13)*B(2,1)*sin(x(17)-x(16))-x(14)*x(14)*B(2,2)*sin(x(17)-x(17))-x(14)*x(15)*B(2,3)*sin(x(17)-x(18));
+       x(21)+x(22)-x(15)*x(13)*B(3,1)*sin(x(18)-x(16))-x(15)*x(14)*B(3,2)*sin(x(18)-x(17))-x(15)*x(15)*B(3,3)*sin(x(18)-x(18));
+       x(9)*x(13)*cos(x(5)-x(16))-x(11)*x(13)*sin(x(5)-x(16))+Q1-x(13)*x(13)*B(1,1)*cos(x(16)-x(16))-x(13)*x(14)*B(1,2)*cos(x(16)-x(17))-x(13)*x(15)*B(1,3)*cos(x(16)-x(18));
+       x(10)*x(14)*cos(x(6)-x(17))-x(12)*x(14)*sin(x(6)-x(17))+Q2-x(14)*x(13)*B(2,1)*cos(x(17)-x(16))-x(14)*x(14)*B(2,2)*cos(x(17)-x(17))-x(14)*x(15)*B(2,3)*cos(x(17)-x(18));
+       Q3-x(15)*x(13)*B(3,1)*cos(x(18)-x(16))-x(15)*x(14)*B(3,2)*cos(x(18)-x(17))-x(15)*x(15)*B(3,3)*cos(x(18)-x(18));
+    ];
+
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">% Solving for Equilibrium Points</mwsh:comments>
+options = optimset(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Algorithm'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'levenberg-marquardt'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'TolFun'</mwsh:strings>, 1e-12, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'TolX'</mwsh:strings>, 1e-12,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'MaxIter'</mwsh:strings>, 10000000, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'MaxFunEvals'</mwsh:strings>, 10000000);
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">% options = optimset('MaxIter', 100000000, 'MaxFunEvals', 100000000);</mwsh:comments>
+[xeq,fval,flag,out,J]=fsolve(f,x0,options);
+
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">% Displaying the equilibrium point using descriptive variable names</mwsh:comments>
+eq1_eq = xeq(1);
+eq2_eq = xeq(2);
+ed1_eq = xeq(3);
+ed2_eq = xeq(4);
+delta1_eq = xeq(5);
+delta2_eq = xeq(6);
+omega1_eq = xeq(7);
+omega2_eq = xeq(8);
+id1_eq = xeq(9);
+id2_eq = xeq(10);
+iq1_eq = xeq(11);
+iq2_eq = xeq(12);
+v1_eq = xeq(13);
+v2_eq = xeq(14);
+v3_eq = xeq(15);
+theta1_eq = xeq(16);
+theta2_eq = xeq(17);
+theta3_eq = xeq(18);
+efd1_eq = xeq(19);
+efd2_eq = xeq(20);
+tm1_eq = xeq(19);
+tm2_eq = xeq(20);
+
+disp(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Equilibrium Point:'</mwsh:strings>);
+fprintf(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'eq1 = %f\n'</mwsh:strings>, eq1_eq);
+fprintf(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'eq2 = %f\n'</mwsh:strings>, eq2_eq);
+fprintf(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'ed1 = %f\n'</mwsh:strings>, ed1_eq);
+fprintf(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'ed2 = %f\n'</mwsh:strings>, ed2_eq);
+fprintf(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'delta1 = %f\n'</mwsh:strings>, rad2deg(delta1_eq));
+fprintf(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'delta2 = %f\n'</mwsh:strings>, rad2deg(delta2_eq));
+fprintf(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'omega1 = %f\n'</mwsh:strings>, omega1_eq);
+fprintf(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'omega2 = %f\n'</mwsh:strings>, omega2_eq);
+fprintf(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'id1 = %f\n'</mwsh:strings>, id1_eq);
+fprintf(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'id2 = %f\n'</mwsh:strings>, id2_eq);
+fprintf(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'iq1 = %f\n'</mwsh:strings>, iq1_eq);
+fprintf(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'iq2 = %f\n'</mwsh:strings>, iq2_eq);
+fprintf(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'v1 = %f\n'</mwsh:strings>, v1_eq);
+fprintf(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'v2 = %f\n'</mwsh:strings>, v2_eq);
+fprintf(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'v3 = %f\n'</mwsh:strings>, v3_eq);
+fprintf(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'theta1 = %f\n'</mwsh:strings>, rad2deg(theta1_eq));
+fprintf(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'theta2 = %f\n'</mwsh:strings>, rad2deg(theta2_eq));
+fprintf(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'theta3 = %f\n'</mwsh:strings>, rad2deg(theta3_eq));
+fprintf(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'efd1 = %f\n'</mwsh:strings>, efd1_eq);
+fprintf(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'efd2 = %f\n'</mwsh:strings>, efd2_eq);
+fprintf(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'tm1 = %f\n'</mwsh:strings>, tm1_eq);
+fprintf(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'tm2 = %f\n'</mwsh:strings>, tm2_eq);
+
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">%B Matrix</mwsh:comments>
+B=[0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;1 0;0 1];
+
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">%E Matrix</mwsh:comments>
+E=zeros(18,18);
+E(1,1)=Tdo1;
+E(2,2)=Tdo2;
+E(3,3)=Tqo1;
+E(4,4)=Tqo2;
+E(5,5)=1;
+E(6,6)=1;
+E(7,7)=(2*H1)/omega_ref;
+E(8,8)=(2*H2)/omega_ref;
+
+<mwsh:comments xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">%Finite Poles</mwsh:comments>
+pol=eig(J(1:18,1:18),E);
+s_pol=size(pol);
+
+fin_pol=[];
+
+<mwsh:keywords xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">for</mwsh:keywords> i=1:s_pol(1)
+    <mwsh:keywords xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">if</mwsh:keywords> pol(i)~=Inf
+        fin_pol=[fin_pol;pol(i)];
+    <mwsh:keywords xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">end</mwsh:keywords>
+<mwsh:keywords xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">end</mwsh:keywords>
+
+disp(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Finite Poles:'</mwsh:strings>);
+<mwsh:keywords xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">for</mwsh:keywords> i=1:size(fin_pol,1)
+    fprintf(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'%f\n'</mwsh:strings>, fin_pol(i));
+<mwsh:keywords xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">end</mwsh:keywords>
+
+tspan=[0 500];
+options=odeset(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Mass'</mwsh:strings>,E,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'MStateDependence'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'none'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'MassSingular'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'yes'</mwsh:strings>);
+x_ini=xeq(1:18);
+J=J(1:18,1:18);
+[t,x]=ode23t(@(t,x) des(J,x),tspan,x_ini,options);
+
+figure()
+plot(t,x(:,1),<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'r-'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3),hold <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">on</mwsh:strings>,plot(t,x(:,2),<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'k-'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3)
+xlabel(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Time t \rightarrow'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontWeight'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'bold'</mwsh:strings>)
+ylabel(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'q-axis EMF: E_q(t) \rightarrow'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontWeight'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'bold'</mwsh:strings>)
+grid <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">on</mwsh:strings>
+legendObj = legend({<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'\Delta E_{q_1}'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'\Delta E_{q_2}'</mwsh:strings>}, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 1.5);
+legendBox = findobj(legendObj, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Type'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Patch'</mwsh:strings>);
+set(legendBox, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3)
+set(gca, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontWeight'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'bold'</mwsh:strings>)
+hold <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">off</mwsh:strings>
+
+figure()
+plot(t,x(:,3),<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'r-'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3),hold <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">on</mwsh:strings>,plot(t,x(:,4),<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'k-'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3)
+xlabel(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Time t \rightarrow'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontWeight'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'bold'</mwsh:strings>)
+ylabel(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'d-axis EMF: E_d(t) \rightarrow'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontWeight'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'bold'</mwsh:strings>)
+grid <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">on</mwsh:strings>
+legendObj = legend({<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'\Delta E_{d_1}'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'\Delta E_{d_2}'</mwsh:strings>}, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 1.5);
+legendBox = findobj(legendObj, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Type'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Patch'</mwsh:strings>);
+set(legendBox, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3)
+set(gca, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontWeight'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'bold'</mwsh:strings>)
+hold <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">off</mwsh:strings>
+
+figure()
+plot(t,x(:,5)-x(:,5),<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'r-'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3),hold <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">on</mwsh:strings>,plot(t,x(:,6)-x(:,5),<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'k-'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3)
+xlabel(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Time t \rightarrow'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontWeight'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'bold'</mwsh:strings>)
+ylabel(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Rotor Angle: \delta(t) \rightarrow'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontWeight'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'bold'</mwsh:strings>)
+grid <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">on</mwsh:strings>
+legendObj = legend({<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'\Delta \delta_1'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'\Delta \delta_2'</mwsh:strings>}, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 1.5);
+legendBox = findobj(legendObj, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Type'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Patch'</mwsh:strings>);
+set(legendBox, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3)
+set(gca, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontWeight'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'bold'</mwsh:strings>)
+hold <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">off</mwsh:strings>
+
+figure()
+plot(t,x(:,7),<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'r-'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3),hold <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">on</mwsh:strings>,plot(t,x(:,8),<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'k-'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3)
+xlabel(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Time t \rightarrow'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontWeight'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'bold'</mwsh:strings>)
+ylabel(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Rotor Anglular Velocity: \omega(t) \rightarrow'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontWeight'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'bold'</mwsh:strings>)
+grid <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">on</mwsh:strings>
+legendObj = legend({<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'\Delta \omega_1'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'\Delta \omega_2'</mwsh:strings>}, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 1.5);
+legendBox = findobj(legendObj, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Type'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Patch'</mwsh:strings>);
+set(legendBox, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3)
+set(gca, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontWeight'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'bold'</mwsh:strings>)
+hold <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">off</mwsh:strings>
+
+figure()
+plot(t,x(:,8),<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'r-'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3),hold <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">on</mwsh:strings>,plot(t,x(:,10),<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'k-'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3)
+xlabel(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Time t \rightarrow'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontWeight'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'bold'</mwsh:strings>)
+ylabel(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'d-axis Current: I_d(t) \rightarrow'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontWeight'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'bold'</mwsh:strings>)
+grid <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">on</mwsh:strings>
+legendObj = legend({<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'\Delta I_{d_1}'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'\Delta I_{d_2}'</mwsh:strings>}, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 1.5);
+legendBox = findobj(legendObj, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Type'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Patch'</mwsh:strings>);
+set(legendBox, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3)
+set(gca, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontWeight'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'bold'</mwsh:strings>)
+hold <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">off</mwsh:strings>
+
+figure()
+plot(t,x(:,11),<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'r-'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3),hold <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">on</mwsh:strings>,plot(t,x(:,12),<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'k-'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3)
+xlabel(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Time t \rightarrow'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontWeight'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'bold'</mwsh:strings>)
+ylabel(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'q-axis Current: I_q(t) \rightarrow'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontWeight'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'bold'</mwsh:strings>)
+grid <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">on</mwsh:strings>
+legendObj = legend({<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'\Delta I_{q_1}'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'\Delta I_{q_2}'</mwsh:strings>}, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 1.5);
+legendBox = findobj(legendObj, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Type'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Patch'</mwsh:strings>);
+set(legendBox, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3)
+set(gca, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontWeight'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'bold'</mwsh:strings>)
+hold <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">off</mwsh:strings>
+
+figure()
+plot(t,x(:,13),<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'r-'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3),hold <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">on</mwsh:strings>,plot(t,x(:,14),<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'k-'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3),plot(t,x(:,15),<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'b-'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3)
+xlabel(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Time t \rightarrow'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontWeight'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'bold'</mwsh:strings>)
+ylabel(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Voltage: V(t) \rightarrow'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontWeight'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'bold'</mwsh:strings>)
+grid <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">on</mwsh:strings>
+legendObj = legend({<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'\Delta V_1'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'\Delta V_2'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'\Delta V_3'</mwsh:strings>}, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 1.5);
+legendBox = findobj(legendObj, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Type'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Patch'</mwsh:strings>);
+set(legendBox, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3)
+set(gca, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontWeight'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'bold'</mwsh:strings>)
+hold <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">off</mwsh:strings>
+
+figure()
+plot(t,x(:,16)-x(:,5),<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'r-'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3),hold <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">on</mwsh:strings>,plot(t,x(:,17)-x(:,5),<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'k-'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3),plot(t,x(:,18)-x(:,5),<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'b-'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3)
+xlabel(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Time t \rightarrow'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontWeight'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'bold'</mwsh:strings>)
+ylabel(<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Voltage Phase: \theta(t) \rightarrow'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontWeight'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'bold'</mwsh:strings>)
+grid <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">on</mwsh:strings>
+legendObj = legend({<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'\Delta \theta_1'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'\Delta \theta_2'</mwsh:strings>,<mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'\Delta \theta_3'</mwsh:strings>}, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 1.5);
+legendBox = findobj(legendObj, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Type'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'Patch'</mwsh:strings>);
+set(legendBox, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3)
+set(gca, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'LineWidth'</mwsh:strings>, 3, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontSize'</mwsh:strings>, 28, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'FontWeight'</mwsh:strings>, <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">'bold'</mwsh:strings>)
+hold <mwsh:strings xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">off</mwsh:strings>
+
+<mwsh:keywords xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">function</mwsh:keywords> dae=des(J,x)
+    dae=J*x;
+<mwsh:keywords xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">end</mwsh:keywords>
+</programlisting><screen><computeroutput><emphasis>
+Equation solved, solver stalled.
+
+fsolve stopped because the relative size of the current step is less than the
+value of the step size tolerance and the vector of function values
+is near zero as measured by the value of the function tolerance.
+
+Equilibrium Point:
+eq1 = 1.781266
+eq2 = 1.145919
+ed1 = -0.001078
+ed2 = 0.002425
+delta1 = -3.074677
+delta2 = -1.808884
+omega1 = 1.000000
+omega2 = 1.000000
+id1 = -0.297229
+id2 = -0.092050
+iq1 = -0.001615
+iq2 = 0.002406
+v1 = 1.816875
+v2 = 1.162612
+v3 = 0.709778
+theta1 = -3.030661
+theta2 = -1.958019
+theta3 = -2.709912
+efd1 = 1.550617
+efd2 = 1.041792
+tm1 = 1.550617
+tm2 = 1.041792
+Finite Poles:
+-1.990518
+-1.619799
+-0.017136
+-0.017136
+-0.129753
+-0.043809
+-0.021284
+0.000000
+</emphasis></computeroutput></screen><mediaobject><imageobject><imagedata scalefit="1" width="100%" contentdepth="100%" fileref="file:///C:/Users/DELL/AppData/Local/Temp/ieee3_input_fsolve_01.jpg"/></imageobject></mediaobject><mediaobject><imageobject><imagedata scalefit="1" width="100%" contentdepth="100%" fileref="file:///C:/Users/DELL/AppData/Local/Temp/ieee3_input_fsolve_02.jpg"/></imageobject></mediaobject><mediaobject><imageobject><imagedata scalefit="1" width="100%" contentdepth="100%" fileref="file:///C:/Users/DELL/AppData/Local/Temp/ieee3_input_fsolve_03.jpg"/></imageobject></mediaobject><mediaobject><imageobject><imagedata scalefit="1" width="100%" contentdepth="100%" fileref="file:///C:/Users/DELL/AppData/Local/Temp/ieee3_input_fsolve_04.jpg"/></imageobject></mediaobject><mediaobject><imageobject><imagedata scalefit="1" width="100%" contentdepth="100%" fileref="file:///C:/Users/DELL/AppData/Local/Temp/ieee3_input_fsolve_05.jpg"/></imageobject></mediaobject><mediaobject><imageobject><imagedata scalefit="1" width="100%" contentdepth="100%" fileref="file:///C:/Users/DELL/AppData/Local/Temp/ieee3_input_fsolve_06.jpg"/></imageobject></mediaobject><mediaobject><imageobject><imagedata scalefit="1" width="100%" contentdepth="100%" fileref="file:///C:/Users/DELL/AppData/Local/Temp/ieee3_input_fsolve_07.jpg"/></imageobject></mediaobject><mediaobject><imageobject><imagedata scalefit="1" width="100%" contentdepth="100%" fileref="file:///C:/Users/DELL/AppData/Local/Temp/ieee3_input_fsolve_08.jpg"/></imageobject></mediaobject></section><literallayout><emphasis>
+Published with MATLAB® R2024a</emphasis></literallayout></article>

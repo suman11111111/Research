@@ -1,0 +1,792 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>ieee3_input_fsolve</title>
+<meta name="generator" content="MATLAB 24.1">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2025-04-09">
+<meta name="DC.source" content="ieee3_input_fsolve.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<pre class="codeinput">clc,clear,close <span class="string">all</span>
+
+<span class="comment">%Ref Angular Frequency</span>
+omega_ref=1;
+
+<span class="comment">%Field Axis Emf</span>
+Efd1=0.8;
+Efd2=0.8;
+
+<span class="comment">%Mechanical Power Input</span>
+TM1=0.2;
+TM2=0.25;
+
+<span class="comment">%Inertia</span>
+H1=6.4;
+H2=3.01;
+
+<span class="comment">%Damping</span>
+D1=0.2;
+D2=0.2;
+
+<span class="comment">%Stator Resistance</span>
+Rs1=0;
+Rs2=0;
+
+<span class="comment">%daxis Stator Reactance</span>
+Xd1=0.8958;
+Xd2=1.3125;
+
+<span class="comment">%qaxis Stator Reactance</span>
+Xq1=0.8645;
+Xq2=1.2578;
+
+<span class="comment">%daxis Stator Transient Reactance</span>
+Xd_dash1=0.1198;
+Xd_dash2=0.1813;
+
+<span class="comment">%qaxis Stator Transient Reactance</span>
+Xq_dash1=0.1969;
+Xq_dash2=0.25;
+
+<span class="comment">%Time Constant of d-axis</span>
+Tdo1=6;
+Tdo2=5.89;
+
+<span class="comment">%Time Constant of q-axis</span>
+Tqo1=0.535;
+Tqo2=0.6;
+
+<span class="comment">%B-Bus Matrix</span>
+B=[-0.25 0.1 0.15;0.1 -0.2 0.1;0.15 0.1 -0.25];
+
+<span class="comment">% %Active Power Demand</span>
+<span class="comment">% P1=0.2;</span>
+<span class="comment">% P2=0.25;</span>
+<span class="comment">% P3=0.45;</span>
+
+<span class="comment">%Reactive Power Demand</span>
+Q1=0.1194;
+Q2=0.1304;
+Q3=0.15;
+
+<span class="comment">% Initialization of states</span>
+
+<span class="comment">% eq1_0=-0.1864;</span>
+<span class="comment">% eq2_0=-0.3179;</span>
+<span class="comment">% ed1_0=0.0217;</span>
+<span class="comment">% ed2_0=0.0273;</span>
+<span class="comment">% delta1_0=-0.1622;</span>
+<span class="comment">% delta2_0=-0.0279;</span>
+<span class="comment">% omega1_0=1;</span>
+<span class="comment">% omega2_0=1;</span>
+<span class="comment">% id1_0=-0.2080;</span>
+<span class="comment">% id2_0=-0.2672;</span>
+<span class="comment">% iq1_0=0.0325;</span>
+<span class="comment">% iq2_0=-0.0271;</span>
+<span class="comment">% v1_0=1;</span>
+<span class="comment">% v2_0=1;</span>
+<span class="comment">% v3_0=0.9905;</span>
+<span class="comment">% theta1_0=0;</span>
+<span class="comment">% theta2_0=-0.0014;</span>
+<span class="comment">% theta3_0=-0.0281;</span>
+<span class="comment">% efd1_0=0;</span>
+<span class="comment">% efd2_0=0;</span>
+<span class="comment">% tm1_0=0.2;</span>
+<span class="comment">% tm2_0=0.25;</span>
+
+<span class="comment">% Consistent Initial Conditions</span>
+eq1_0=1.781266;
+eq2_0=1.145919;
+ed1_0=-0.001078;
+ed2_0=0.002425;
+delta1_0=-0.0537;
+delta2_0=-0.0316;
+omega1_0=1;
+omega2_0=1;
+id1_0=-0.297229;
+id2_0=-0.092050;
+iq1_0=-0.001615;
+iq2_0=0.002406;
+v1_0=1.816875;
+v2_0=1.162612;
+v3_0=0.709778;
+theta1_0=-0.0529;
+theta2_0=-0.0342;
+theta3_0=-0.0473;
+efd1_0=1.550617;
+efd2_0=1.041792;
+tm1_0=1.550617;
+tm2_0=1.041792;
+
+<span class="comment">% Initial guess vector</span>
+x0=[eq1_0;eq2_0;ed1_0;ed2_0;delta1_0;delta2_0;omega1_0;omega2_0;id1_0;id2_0;iq1_0;iq2_0;v1_0;v2_0;v3_0;theta1_0;theta2_0;theta3_0;efd1_0;efd2_0;tm1_0;tm2_0];
+
+<span class="comment">%Defining Function with 'states' as the input variable</span>
+f=@(x)[-x(1)-(Xd1-Xd_dash1)*x(9)+x(19);
+       -x(2)-(Xd2-Xd_dash2)*x(10)+x(20);
+       -x(3)+(Xq1-Xq_dash1)*x(11);
+       -x(4)+(Xq2-Xq_dash2)*x(12);
+       x(7)-omega_ref;
+       x(8)-omega_ref;
+       x(21)-x(3)*x(9)-x(1)*x(11)-(Xq_dash1-Xd_dash1)*x(9)*x(11)-D1*(x(7)-omega_ref);
+       x(22)-x(4)*x(10)-x(2)*x(12)-(Xq_dash2-Xd_dash2)*x(10)*x(12)-D2*(x(8)-omega_ref);
+       x(3)-x(13)*cos(x(16))*sin(x(5))+x(13)*sin(x(16))*cos(x(5))-Rs1*x(9)+Xq_dash1*x(11);
+       x(4)-x(14)*cos(x(17))*sin(x(6))+x(14)*sin(x(17))*cos(x(6))-Rs2*x(10)+Xq_dash2*x(12);
+       x(1)-x(13)*cos(x(16))*cos(x(5))-x(13)*sin(x(16))*sin(x(5))-Rs1*x(11)-Xd_dash1*x(9);
+       x(2)-x(14)*cos(x(17))*cos(x(6))-x(14)*sin(x(17))*sin(x(6))-Rs2*x(12)-Xd_dash2*x(10);
+       x(9)*x(13)*sin(x(5)-x(16))+x(11)*x(13)*cos(x(5)-x(16))+x(21)-x(13)*x(13)*B(1,1)*sin(x(16)-x(16))-x(13)*x(14)*B(1,2)*sin(x(16)-x(17))-x(13)*x(15)*B(1,3)*sin(x(16)-x(18));
+       x(10)*x(14)*sin(x(6)-x(17))+x(12)*x(14)*cos(x(6)-x(17))+x(22)-x(14)*x(13)*B(2,1)*sin(x(17)-x(16))-x(14)*x(14)*B(2,2)*sin(x(17)-x(17))-x(14)*x(15)*B(2,3)*sin(x(17)-x(18));
+       x(21)+x(22)-x(15)*x(13)*B(3,1)*sin(x(18)-x(16))-x(15)*x(14)*B(3,2)*sin(x(18)-x(17))-x(15)*x(15)*B(3,3)*sin(x(18)-x(18));
+       x(9)*x(13)*cos(x(5)-x(16))-x(11)*x(13)*sin(x(5)-x(16))+Q1-x(13)*x(13)*B(1,1)*cos(x(16)-x(16))-x(13)*x(14)*B(1,2)*cos(x(16)-x(17))-x(13)*x(15)*B(1,3)*cos(x(16)-x(18));
+       x(10)*x(14)*cos(x(6)-x(17))-x(12)*x(14)*sin(x(6)-x(17))+Q2-x(14)*x(13)*B(2,1)*cos(x(17)-x(16))-x(14)*x(14)*B(2,2)*cos(x(17)-x(17))-x(14)*x(15)*B(2,3)*cos(x(17)-x(18));
+       Q3-x(15)*x(13)*B(3,1)*cos(x(18)-x(16))-x(15)*x(14)*B(3,2)*cos(x(18)-x(17))-x(15)*x(15)*B(3,3)*cos(x(18)-x(18));
+    ];
+
+<span class="comment">% Solving for Equilibrium Points</span>
+options = optimset(<span class="string">'Algorithm'</span>, <span class="string">'levenberg-marquardt'</span>,<span class="string">'TolFun'</span>, 1e-12, <span class="string">'TolX'</span>, 1e-12,<span class="string">'MaxIter'</span>, 10000000, <span class="string">'MaxFunEvals'</span>, 10000000);
+<span class="comment">% options = optimset('MaxIter', 100000000, 'MaxFunEvals', 100000000);</span>
+[xeq,fval,flag,out,J]=fsolve(f,x0,options);
+
+<span class="comment">% Displaying the equilibrium point using descriptive variable names</span>
+eq1_eq = xeq(1);
+eq2_eq = xeq(2);
+ed1_eq = xeq(3);
+ed2_eq = xeq(4);
+delta1_eq = xeq(5);
+delta2_eq = xeq(6);
+omega1_eq = xeq(7);
+omega2_eq = xeq(8);
+id1_eq = xeq(9);
+id2_eq = xeq(10);
+iq1_eq = xeq(11);
+iq2_eq = xeq(12);
+v1_eq = xeq(13);
+v2_eq = xeq(14);
+v3_eq = xeq(15);
+theta1_eq = xeq(16);
+theta2_eq = xeq(17);
+theta3_eq = xeq(18);
+efd1_eq = xeq(19);
+efd2_eq = xeq(20);
+tm1_eq = xeq(19);
+tm2_eq = xeq(20);
+
+disp(<span class="string">'Equilibrium Point:'</span>);
+fprintf(<span class="string">'eq1 = %f\n'</span>, eq1_eq);
+fprintf(<span class="string">'eq2 = %f\n'</span>, eq2_eq);
+fprintf(<span class="string">'ed1 = %f\n'</span>, ed1_eq);
+fprintf(<span class="string">'ed2 = %f\n'</span>, ed2_eq);
+fprintf(<span class="string">'delta1 = %f\n'</span>, rad2deg(delta1_eq));
+fprintf(<span class="string">'delta2 = %f\n'</span>, rad2deg(delta2_eq));
+fprintf(<span class="string">'omega1 = %f\n'</span>, omega1_eq);
+fprintf(<span class="string">'omega2 = %f\n'</span>, omega2_eq);
+fprintf(<span class="string">'id1 = %f\n'</span>, id1_eq);
+fprintf(<span class="string">'id2 = %f\n'</span>, id2_eq);
+fprintf(<span class="string">'iq1 = %f\n'</span>, iq1_eq);
+fprintf(<span class="string">'iq2 = %f\n'</span>, iq2_eq);
+fprintf(<span class="string">'v1 = %f\n'</span>, v1_eq);
+fprintf(<span class="string">'v2 = %f\n'</span>, v2_eq);
+fprintf(<span class="string">'v3 = %f\n'</span>, v3_eq);
+fprintf(<span class="string">'theta1 = %f\n'</span>, rad2deg(theta1_eq));
+fprintf(<span class="string">'theta2 = %f\n'</span>, rad2deg(theta2_eq));
+fprintf(<span class="string">'theta3 = %f\n'</span>, rad2deg(theta3_eq));
+fprintf(<span class="string">'efd1 = %f\n'</span>, efd1_eq);
+fprintf(<span class="string">'efd2 = %f\n'</span>, efd2_eq);
+fprintf(<span class="string">'tm1 = %f\n'</span>, tm1_eq);
+fprintf(<span class="string">'tm2 = %f\n'</span>, tm2_eq);
+
+<span class="comment">%Displaying solution of the system</span>
+disp(<span class="string">'Function Value at Equillibrium:'</span>);
+fprintf(<span class="string">'%f\n'</span>,fval);
+
+<span class="comment">%B Matrix</span>
+B=[0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;1 0;0 1];
+
+<span class="comment">%E Matrix</span>
+E=zeros(18,18);
+E(1,1)=Tdo1;
+E(2,2)=Tdo2;
+E(3,3)=Tqo1;
+E(4,4)=Tqo2;
+E(5,5)=1;
+E(6,6)=1;
+E(7,7)=(2*H1)/omega_ref;
+E(8,8)=(2*H2)/omega_ref;
+
+<span class="comment">%Finite Poles</span>
+pol=eig(J(1:18,1:18),E);
+s_pol=size(pol);
+
+fin_pol=[];
+
+<span class="keyword">for</span> i=1:s_pol(1)
+    <span class="keyword">if</span> pol(i)~=Inf
+        fin_pol=[fin_pol;pol(i)];
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+disp(<span class="string">'Finite Poles:'</span>);
+<span class="keyword">for</span> i=1:size(fin_pol,1)
+    fprintf(<span class="string">'%f\n'</span>, fin_pol(i));
+<span class="keyword">end</span>
+
+tspan=[0 500];
+options=odeset(<span class="string">'Mass'</span>,E,<span class="string">'MStateDependence'</span>,<span class="string">'none'</span>,<span class="string">'MassSingular'</span>,<span class="string">'yes'</span>);
+x_ini=xeq(1:18);
+J=J(1:18,1:18);
+[t,x]=ode23t(@(t,x) des(J,x),tspan,x_ini,options);
+
+figure()
+plot(t,x(:,1),<span class="string">'r-'</span>,<span class="string">'LineWidth'</span>, 3),hold <span class="string">on</span>,plot(t,x(:,2),<span class="string">'k-'</span>,<span class="string">'LineWidth'</span>, 3)
+xlabel(<span class="string">'Time t \rightarrow'</span>, <span class="string">'FontSize'</span>, 28, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+ylabel(<span class="string">'q-axis EMF: E_q(t) \rightarrow'</span>, <span class="string">'FontSize'</span>, 28, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+grid <span class="string">on</span>
+legendObj = legend({<span class="string">'\Delta E_{q_1}'</span>,<span class="string">'\Delta E_{q_2}'</span>}, <span class="string">'FontSize'</span>, 28, <span class="string">'LineWidth'</span>, 1.5);
+legendBox = findobj(legendObj, <span class="string">'Type'</span>, <span class="string">'Patch'</span>);
+set(legendBox, <span class="string">'LineWidth'</span>, 3)
+set(gca, <span class="string">'LineWidth'</span>, 3, <span class="string">'FontSize'</span>, 28, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+hold <span class="string">off</span>
+
+figure()
+plot(t,x(:,3),<span class="string">'r-'</span>,<span class="string">'LineWidth'</span>, 3),hold <span class="string">on</span>,plot(t,x(:,4),<span class="string">'k-'</span>,<span class="string">'LineWidth'</span>, 3)
+xlabel(<span class="string">'Time t \rightarrow'</span>, <span class="string">'FontSize'</span>, 28, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+ylabel(<span class="string">'d-axis EMF: E_d(t) \rightarrow'</span>, <span class="string">'FontSize'</span>, 28, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+grid <span class="string">on</span>
+legendObj = legend({<span class="string">'\Delta E_{d_1}'</span>,<span class="string">'\Delta E_{d_2}'</span>}, <span class="string">'FontSize'</span>, 28, <span class="string">'LineWidth'</span>, 1.5);
+legendBox = findobj(legendObj, <span class="string">'Type'</span>, <span class="string">'Patch'</span>);
+set(legendBox, <span class="string">'LineWidth'</span>, 3)
+set(gca, <span class="string">'LineWidth'</span>, 3, <span class="string">'FontSize'</span>, 28, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+hold <span class="string">off</span>
+
+figure()
+plot(t,x(:,5),<span class="string">'r-'</span>,<span class="string">'LineWidth'</span>, 3),hold <span class="string">on</span>,plot(t,x(:,6),<span class="string">'k-'</span>,<span class="string">'LineWidth'</span>, 3)
+xlabel(<span class="string">'Time t \rightarrow'</span>, <span class="string">'FontSize'</span>, 28, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+ylabel(<span class="string">'Rotor Angle: \delta(t) \rightarrow'</span>, <span class="string">'FontSize'</span>, 28, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+grid <span class="string">on</span>
+legendObj = legend({<span class="string">'\Delta \delta_1'</span>,<span class="string">'\Delta \delta_2'</span>}, <span class="string">'FontSize'</span>, 28, <span class="string">'LineWidth'</span>, 1.5);
+legendBox = findobj(legendObj, <span class="string">'Type'</span>, <span class="string">'Patch'</span>);
+set(legendBox, <span class="string">'LineWidth'</span>, 3)
+set(gca, <span class="string">'LineWidth'</span>, 3, <span class="string">'FontSize'</span>, 28, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+hold <span class="string">off</span>
+
+figure()
+plot(t,x(:,7),<span class="string">'r-'</span>,<span class="string">'LineWidth'</span>, 3),hold <span class="string">on</span>,plot(t,x(:,8),<span class="string">'k-'</span>,<span class="string">'LineWidth'</span>, 3)
+xlabel(<span class="string">'Time t \rightarrow'</span>, <span class="string">'FontSize'</span>, 28, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+ylabel(<span class="string">'Rotor Anglular Velocity: \omega(t) \rightarrow'</span>, <span class="string">'FontSize'</span>, 28, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+grid <span class="string">on</span>
+legendObj = legend({<span class="string">'\Delta \omega_1'</span>,<span class="string">'\Delta \omega_2'</span>}, <span class="string">'FontSize'</span>, 28, <span class="string">'LineWidth'</span>, 1.5);
+legendBox = findobj(legendObj, <span class="string">'Type'</span>, <span class="string">'Patch'</span>);
+set(legendBox, <span class="string">'LineWidth'</span>, 3)
+set(gca, <span class="string">'LineWidth'</span>, 3, <span class="string">'FontSize'</span>, 28, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+hold <span class="string">off</span>
+
+figure()
+plot(t,x(:,8),<span class="string">'r-'</span>,<span class="string">'LineWidth'</span>, 3),hold <span class="string">on</span>,plot(t,x(:,10),<span class="string">'k-'</span>,<span class="string">'LineWidth'</span>, 3)
+xlabel(<span class="string">'Time t \rightarrow'</span>, <span class="string">'FontSize'</span>, 28, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+ylabel(<span class="string">'d-axis Current: I_d(t) \rightarrow'</span>, <span class="string">'FontSize'</span>, 28, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+grid <span class="string">on</span>
+legendObj = legend({<span class="string">'\Delta I_{d_1}'</span>,<span class="string">'\Delta I_{d_2}'</span>}, <span class="string">'FontSize'</span>, 28, <span class="string">'LineWidth'</span>, 1.5);
+legendBox = findobj(legendObj, <span class="string">'Type'</span>, <span class="string">'Patch'</span>);
+set(legendBox, <span class="string">'LineWidth'</span>, 3)
+set(gca, <span class="string">'LineWidth'</span>, 3, <span class="string">'FontSize'</span>, 28, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+hold <span class="string">off</span>
+
+figure()
+plot(t,x(:,11),<span class="string">'r-'</span>,<span class="string">'LineWidth'</span>, 3),hold <span class="string">on</span>,plot(t,x(:,12),<span class="string">'k-'</span>,<span class="string">'LineWidth'</span>, 3)
+xlabel(<span class="string">'Time t \rightarrow'</span>, <span class="string">'FontSize'</span>, 28, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+ylabel(<span class="string">'q-axis Current: I_q(t) \rightarrow'</span>, <span class="string">'FontSize'</span>, 28, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+grid <span class="string">on</span>
+legendObj = legend({<span class="string">'\Delta I_{q_1}'</span>,<span class="string">'\Delta I_{q_2}'</span>}, <span class="string">'FontSize'</span>, 28, <span class="string">'LineWidth'</span>, 1.5);
+legendBox = findobj(legendObj, <span class="string">'Type'</span>, <span class="string">'Patch'</span>);
+set(legendBox, <span class="string">'LineWidth'</span>, 3)
+set(gca, <span class="string">'LineWidth'</span>, 3, <span class="string">'FontSize'</span>, 28, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+hold <span class="string">off</span>
+
+figure()
+plot(t,x(:,13),<span class="string">'r-'</span>,<span class="string">'LineWidth'</span>, 3),hold <span class="string">on</span>,plot(t,x(:,14),<span class="string">'k-'</span>,<span class="string">'LineWidth'</span>, 3),plot(t,x(:,15),<span class="string">'b-'</span>,<span class="string">'LineWidth'</span>, 3)
+xlabel(<span class="string">'Time t \rightarrow'</span>, <span class="string">'FontSize'</span>, 28, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+ylabel(<span class="string">'Voltage: V(t) \rightarrow'</span>, <span class="string">'FontSize'</span>, 28, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+grid <span class="string">on</span>
+legendObj = legend({<span class="string">'\Delta V_1'</span>,<span class="string">'\Delta V_2'</span>,<span class="string">'\Delta V_3'</span>}, <span class="string">'FontSize'</span>, 28, <span class="string">'LineWidth'</span>, 1.5);
+legendBox = findobj(legendObj, <span class="string">'Type'</span>, <span class="string">'Patch'</span>);
+set(legendBox, <span class="string">'LineWidth'</span>, 3)
+set(gca, <span class="string">'LineWidth'</span>, 3, <span class="string">'FontSize'</span>, 28, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+hold <span class="string">off</span>
+
+figure()
+plot(t,x(:,16),<span class="string">'r-'</span>,<span class="string">'LineWidth'</span>, 3),hold <span class="string">on</span>,plot(t,x(:,17),<span class="string">'k-'</span>,<span class="string">'LineWidth'</span>, 3),plot(t,x(:,18),<span class="string">'b-'</span>,<span class="string">'LineWidth'</span>, 3)
+xlabel(<span class="string">'Time t \rightarrow'</span>, <span class="string">'FontSize'</span>, 28, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+ylabel(<span class="string">'Voltage Phase: \theta(t) \rightarrow'</span>, <span class="string">'FontSize'</span>, 28, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+grid <span class="string">on</span>
+legendObj = legend({<span class="string">'\Delta \theta_1'</span>,<span class="string">'\Delta \theta_2'</span>,<span class="string">'\Delta \theta_3'</span>}, <span class="string">'FontSize'</span>, 28, <span class="string">'LineWidth'</span>, 1.5);
+legendBox = findobj(legendObj, <span class="string">'Type'</span>, <span class="string">'Patch'</span>);
+set(legendBox, <span class="string">'LineWidth'</span>, 3)
+set(gca, <span class="string">'LineWidth'</span>, 3, <span class="string">'FontSize'</span>, 28, <span class="string">'FontWeight'</span>, <span class="string">'bold'</span>)
+hold <span class="string">off</span>
+
+<span class="keyword">function</span> dae=des(J,x)
+    dae=J*x;
+<span class="keyword">end</span>
+</pre>
+<pre class="codeoutput">
+Equation solved.
+
+fsolve completed because the vector of function values is near zero
+as measured by the value of the function tolerance, and
+the problem appears regular as measured by the gradient.
+
+Equilibrium Point:
+eq1 = 1.781538
+eq2 = 1.145797
+ed1 = 0.001937
+ed2 = -0.004359
+delta1 = -1.514039
+delta2 = -3.789609
+omega1 = 1.000000
+omega2 = 1.000000
+id1 = -0.297349
+id2 = -0.092083
+iq1 = 0.002902
+iq2 = -0.004326
+v1 = 1.817162
+v2 = 1.162505
+v3 = 0.709769
+theta1 = -1.593141
+theta2 = -3.521457
+theta3 = -2.169637
+efd1 = 1.550795
+efd2 = 1.041633
+tm1 = 1.550795
+tm2 = 1.041633
+Function Value at Equillibrium:
+0.000000
+0.000000
+-0.000000
+0.000000
+0.000000
+0.000000
+0.000000
+-0.000000
+-0.000000
+-0.000000
+-0.000000
+0.000000
+-0.000000
+0.000000
+0.000000
+-0.000000
+0.000000
+0.000000
+Finite Poles:
+-1.990523
+-1.619763
+-0.017135
+-0.017135
+-0.129766
+-0.043846
+-0.021284
+0.000000
+</pre>
+<img vspace="5" hspace="5" src="ieee3_input_fsolve_01.jpg" alt=""> <img vspace="5" hspace="5" src="ieee3_input_fsolve_02.jpg" alt=""> <img vspace="5" hspace="5" src="ieee3_input_fsolve_03.jpg" alt=""> <img vspace="5" hspace="5" src="ieee3_input_fsolve_04.jpg" alt=""> <img vspace="5" hspace="5" src="ieee3_input_fsolve_05.jpg" alt=""> <img vspace="5" hspace="5" src="ieee3_input_fsolve_06.jpg" alt=""> <img vspace="5" hspace="5" src="ieee3_input_fsolve_07.jpg" alt=""> <img vspace="5" hspace="5" src="ieee3_input_fsolve_08.jpg" alt=""> <p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2024a</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+clc,clear,close all
+
+%Ref Angular Frequency
+omega_ref=1;
+
+%Field Axis Emf
+Efd1=0.8;
+Efd2=0.8;
+
+%Mechanical Power Input
+TM1=0.2;
+TM2=0.25;
+
+%Inertia
+H1=6.4;
+H2=3.01;
+
+%Damping
+D1=0.2;
+D2=0.2;
+
+%Stator Resistance
+Rs1=0;
+Rs2=0;
+
+%daxis Stator Reactance
+Xd1=0.8958;
+Xd2=1.3125;
+
+%qaxis Stator Reactance
+Xq1=0.8645;
+Xq2=1.2578;
+
+%daxis Stator Transient Reactance
+Xd_dash1=0.1198;
+Xd_dash2=0.1813;
+
+%qaxis Stator Transient Reactance
+Xq_dash1=0.1969;
+Xq_dash2=0.25;
+
+%Time Constant of d-axis
+Tdo1=6;
+Tdo2=5.89;
+
+%Time Constant of q-axis
+Tqo1=0.535; 
+Tqo2=0.6;
+
+%B-Bus Matrix
+B=[-0.25 0.1 0.15;0.1 -0.2 0.1;0.15 0.1 -0.25];
+
+% %Active Power Demand
+% P1=0.2;
+% P2=0.25;
+% P3=0.45;
+
+%Reactive Power Demand
+Q1=0.1194;
+Q2=0.1304;
+Q3=0.15;
+
+% Initialization of states
+
+% eq1_0=-0.1864;
+% eq2_0=-0.3179;
+% ed1_0=0.0217;
+% ed2_0=0.0273;
+% delta1_0=-0.1622;
+% delta2_0=-0.0279;
+% omega1_0=1;
+% omega2_0=1;
+% id1_0=-0.2080;
+% id2_0=-0.2672;
+% iq1_0=0.0325;
+% iq2_0=-0.0271;
+% v1_0=1;
+% v2_0=1;
+% v3_0=0.9905;
+% theta1_0=0;
+% theta2_0=-0.0014;
+% theta3_0=-0.0281;
+% efd1_0=0;
+% efd2_0=0;
+% tm1_0=0.2;
+% tm2_0=0.25;
+
+% Consistent Initial Conditions
+eq1_0=1.781266;
+eq2_0=1.145919;
+ed1_0=-0.001078;
+ed2_0=0.002425;
+delta1_0=-0.0537;
+delta2_0=-0.0316;
+omega1_0=1;
+omega2_0=1;
+id1_0=-0.297229;
+id2_0=-0.092050;
+iq1_0=-0.001615;
+iq2_0=0.002406;
+v1_0=1.816875;
+v2_0=1.162612;
+v3_0=0.709778;
+theta1_0=-0.0529;
+theta2_0=-0.0342;
+theta3_0=-0.0473;
+efd1_0=1.550617;
+efd2_0=1.041792;
+tm1_0=1.550617;
+tm2_0=1.041792;
+
+% Initial guess vector
+x0=[eq1_0;eq2_0;ed1_0;ed2_0;delta1_0;delta2_0;omega1_0;omega2_0;id1_0;id2_0;iq1_0;iq2_0;v1_0;v2_0;v3_0;theta1_0;theta2_0;theta3_0;efd1_0;efd2_0;tm1_0;tm2_0];
+
+%Defining Function with 'states' as the input variable
+f=@(x)[-x(1)-(Xd1-Xd_dash1)*x(9)+x(19);
+       -x(2)-(Xd2-Xd_dash2)*x(10)+x(20);
+       -x(3)+(Xq1-Xq_dash1)*x(11);
+       -x(4)+(Xq2-Xq_dash2)*x(12);
+       x(7)-omega_ref;
+       x(8)-omega_ref;
+       x(21)-x(3)*x(9)-x(1)*x(11)-(Xq_dash1-Xd_dash1)*x(9)*x(11)-D1*(x(7)-omega_ref);
+       x(22)-x(4)*x(10)-x(2)*x(12)-(Xq_dash2-Xd_dash2)*x(10)*x(12)-D2*(x(8)-omega_ref);
+       x(3)-x(13)*cos(x(16))*sin(x(5))+x(13)*sin(x(16))*cos(x(5))-Rs1*x(9)+Xq_dash1*x(11);
+       x(4)-x(14)*cos(x(17))*sin(x(6))+x(14)*sin(x(17))*cos(x(6))-Rs2*x(10)+Xq_dash2*x(12);
+       x(1)-x(13)*cos(x(16))*cos(x(5))-x(13)*sin(x(16))*sin(x(5))-Rs1*x(11)-Xd_dash1*x(9);
+       x(2)-x(14)*cos(x(17))*cos(x(6))-x(14)*sin(x(17))*sin(x(6))-Rs2*x(12)-Xd_dash2*x(10);
+       x(9)*x(13)*sin(x(5)-x(16))+x(11)*x(13)*cos(x(5)-x(16))+x(21)-x(13)*x(13)*B(1,1)*sin(x(16)-x(16))-x(13)*x(14)*B(1,2)*sin(x(16)-x(17))-x(13)*x(15)*B(1,3)*sin(x(16)-x(18));
+       x(10)*x(14)*sin(x(6)-x(17))+x(12)*x(14)*cos(x(6)-x(17))+x(22)-x(14)*x(13)*B(2,1)*sin(x(17)-x(16))-x(14)*x(14)*B(2,2)*sin(x(17)-x(17))-x(14)*x(15)*B(2,3)*sin(x(17)-x(18));
+       x(21)+x(22)-x(15)*x(13)*B(3,1)*sin(x(18)-x(16))-x(15)*x(14)*B(3,2)*sin(x(18)-x(17))-x(15)*x(15)*B(3,3)*sin(x(18)-x(18));
+       x(9)*x(13)*cos(x(5)-x(16))-x(11)*x(13)*sin(x(5)-x(16))+Q1-x(13)*x(13)*B(1,1)*cos(x(16)-x(16))-x(13)*x(14)*B(1,2)*cos(x(16)-x(17))-x(13)*x(15)*B(1,3)*cos(x(16)-x(18));
+       x(10)*x(14)*cos(x(6)-x(17))-x(12)*x(14)*sin(x(6)-x(17))+Q2-x(14)*x(13)*B(2,1)*cos(x(17)-x(16))-x(14)*x(14)*B(2,2)*cos(x(17)-x(17))-x(14)*x(15)*B(2,3)*cos(x(17)-x(18));
+       Q3-x(15)*x(13)*B(3,1)*cos(x(18)-x(16))-x(15)*x(14)*B(3,2)*cos(x(18)-x(17))-x(15)*x(15)*B(3,3)*cos(x(18)-x(18));
+    ];
+
+% Solving for Equilibrium Points
+options = optimset('Algorithm', 'levenberg-marquardt','TolFun', 1e-12, 'TolX', 1e-12,'MaxIter', 10000000, 'MaxFunEvals', 10000000);
+% options = optimset('MaxIter', 100000000, 'MaxFunEvals', 100000000);
+[xeq,fval,flag,out,J]=fsolve(f,x0,options);
+
+% Displaying the equilibrium point using descriptive variable names
+eq1_eq = xeq(1);
+eq2_eq = xeq(2);
+ed1_eq = xeq(3);
+ed2_eq = xeq(4);
+delta1_eq = xeq(5);
+delta2_eq = xeq(6);
+omega1_eq = xeq(7);
+omega2_eq = xeq(8);
+id1_eq = xeq(9);
+id2_eq = xeq(10);
+iq1_eq = xeq(11);
+iq2_eq = xeq(12);
+v1_eq = xeq(13);
+v2_eq = xeq(14);
+v3_eq = xeq(15);
+theta1_eq = xeq(16);
+theta2_eq = xeq(17);
+theta3_eq = xeq(18);
+efd1_eq = xeq(19);
+efd2_eq = xeq(20);
+tm1_eq = xeq(19);
+tm2_eq = xeq(20);
+
+disp('Equilibrium Point:');
+fprintf('eq1 = %f\n', eq1_eq);
+fprintf('eq2 = %f\n', eq2_eq);
+fprintf('ed1 = %f\n', ed1_eq);
+fprintf('ed2 = %f\n', ed2_eq);
+fprintf('delta1 = %f\n', rad2deg(delta1_eq));
+fprintf('delta2 = %f\n', rad2deg(delta2_eq));
+fprintf('omega1 = %f\n', omega1_eq);
+fprintf('omega2 = %f\n', omega2_eq);
+fprintf('id1 = %f\n', id1_eq);
+fprintf('id2 = %f\n', id2_eq);
+fprintf('iq1 = %f\n', iq1_eq);
+fprintf('iq2 = %f\n', iq2_eq);
+fprintf('v1 = %f\n', v1_eq);
+fprintf('v2 = %f\n', v2_eq);
+fprintf('v3 = %f\n', v3_eq);
+fprintf('theta1 = %f\n', rad2deg(theta1_eq));
+fprintf('theta2 = %f\n', rad2deg(theta2_eq));
+fprintf('theta3 = %f\n', rad2deg(theta3_eq));
+fprintf('efd1 = %f\n', efd1_eq);
+fprintf('efd2 = %f\n', efd2_eq);
+fprintf('tm1 = %f\n', tm1_eq);
+fprintf('tm2 = %f\n', tm2_eq);
+
+%Displaying solution of the system
+disp('Function Value at Equillibrium:');
+fprintf('%f\n',fval);
+
+%B Matrix
+B=[0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;1 0;0 1];
+
+%E Matrix
+E=zeros(18,18);
+E(1,1)=Tdo1;
+E(2,2)=Tdo2;
+E(3,3)=Tqo1;
+E(4,4)=Tqo2;
+E(5,5)=1;
+E(6,6)=1;
+E(7,7)=(2*H1)/omega_ref;
+E(8,8)=(2*H2)/omega_ref;
+
+%Finite Poles
+pol=eig(J(1:18,1:18),E);
+s_pol=size(pol);
+
+fin_pol=[];
+
+for i=1:s_pol(1)
+    if pol(i)~=Inf
+        fin_pol=[fin_pol;pol(i)];
+    end
+end
+
+disp('Finite Poles:');
+for i=1:size(fin_pol,1)
+    fprintf('%f\n', fin_pol(i));
+end
+
+tspan=[0 500];
+options=odeset('Mass',E,'MStateDependence','none','MassSingular','yes');
+x_ini=xeq(1:18);
+J=J(1:18,1:18);
+[t,x]=ode23t(@(t,x) des(J,x),tspan,x_ini,options);
+
+figure()
+plot(t,x(:,1),'r-','LineWidth', 3),hold on,plot(t,x(:,2),'k-','LineWidth', 3)
+xlabel('Time t \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
+ylabel('q-axis EMF: E_q(t) \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
+grid on
+legendObj = legend({'\Delta E_{q_1}','\Delta E_{q_2}'}, 'FontSize', 28, 'LineWidth', 1.5);
+legendBox = findobj(legendObj, 'Type', 'Patch');
+set(legendBox, 'LineWidth', 3)
+set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold') 
+hold off
+
+figure()
+plot(t,x(:,3),'r-','LineWidth', 3),hold on,plot(t,x(:,4),'k-','LineWidth', 3)
+xlabel('Time t \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
+ylabel('d-axis EMF: E_d(t) \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
+grid on
+legendObj = legend({'\Delta E_{d_1}','\Delta E_{d_2}'}, 'FontSize', 28, 'LineWidth', 1.5);
+legendBox = findobj(legendObj, 'Type', 'Patch');
+set(legendBox, 'LineWidth', 3)
+set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold') 
+hold off
+
+figure()
+plot(t,x(:,5),'r-','LineWidth', 3),hold on,plot(t,x(:,6),'k-','LineWidth', 3)
+xlabel('Time t \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
+ylabel('Rotor Angle: \delta(t) \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
+grid on
+legendObj = legend({'\Delta \delta_1','\Delta \delta_2'}, 'FontSize', 28, 'LineWidth', 1.5);
+legendBox = findobj(legendObj, 'Type', 'Patch');
+set(legendBox, 'LineWidth', 3)
+set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold') 
+hold off
+
+figure()
+plot(t,x(:,7),'r-','LineWidth', 3),hold on,plot(t,x(:,8),'k-','LineWidth', 3)
+xlabel('Time t \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
+ylabel('Rotor Anglular Velocity: \omega(t) \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
+grid on
+legendObj = legend({'\Delta \omega_1','\Delta \omega_2'}, 'FontSize', 28, 'LineWidth', 1.5);
+legendBox = findobj(legendObj, 'Type', 'Patch');
+set(legendBox, 'LineWidth', 3)
+set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold')
+hold off
+
+figure()
+plot(t,x(:,8),'r-','LineWidth', 3),hold on,plot(t,x(:,10),'k-','LineWidth', 3)
+xlabel('Time t \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
+ylabel('d-axis Current: I_d(t) \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
+grid on
+legendObj = legend({'\Delta I_{d_1}','\Delta I_{d_2}'}, 'FontSize', 28, 'LineWidth', 1.5);
+legendBox = findobj(legendObj, 'Type', 'Patch');
+set(legendBox, 'LineWidth', 3)
+set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold')
+hold off
+
+figure()
+plot(t,x(:,11),'r-','LineWidth', 3),hold on,plot(t,x(:,12),'k-','LineWidth', 3)
+xlabel('Time t \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
+ylabel('q-axis Current: I_q(t) \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
+grid on
+legendObj = legend({'\Delta I_{q_1}','\Delta I_{q_2}'}, 'FontSize', 28, 'LineWidth', 1.5);
+legendBox = findobj(legendObj, 'Type', 'Patch');
+set(legendBox, 'LineWidth', 3)
+set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold')
+hold off
+
+figure()
+plot(t,x(:,13),'r-','LineWidth', 3),hold on,plot(t,x(:,14),'k-','LineWidth', 3),plot(t,x(:,15),'b-','LineWidth', 3)
+xlabel('Time t \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
+ylabel('Voltage: V(t) \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
+grid on
+legendObj = legend({'\Delta V_1','\Delta V_2','\Delta V_3'}, 'FontSize', 28, 'LineWidth', 1.5);
+legendBox = findobj(legendObj, 'Type', 'Patch');
+set(legendBox, 'LineWidth', 3)
+set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold')
+hold off
+
+figure()
+plot(t,x(:,16),'r-','LineWidth', 3),hold on,plot(t,x(:,17),'k-','LineWidth', 3),plot(t,x(:,18),'b-','LineWidth', 3)
+xlabel('Time t \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
+ylabel('Voltage Phase: \theta(t) \rightarrow', 'FontSize', 28, 'FontWeight', 'bold')
+grid on
+legendObj = legend({'\Delta \theta_1','\Delta \theta_2','\Delta \theta_3'}, 'FontSize', 28, 'LineWidth', 1.5);
+legendBox = findobj(legendObj, 'Type', 'Patch');
+set(legendBox, 'LineWidth', 3)
+set(gca, 'LineWidth', 3, 'FontSize', 28, 'FontWeight', 'bold')
+hold off
+
+function dae=des(J,x)
+    dae=J*x;
+end
+
+
+##### SOURCE END #####
+-->
+</body>
+</html>
