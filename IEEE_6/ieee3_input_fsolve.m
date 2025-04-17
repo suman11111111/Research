@@ -62,28 +62,28 @@ Q3=0.15;
 
 % Initialization of states
 
-% eq1_0=-0.1864;
-% eq2_0=-0.3179;
-% ed1_0=0.0217;
-% ed2_0=0.0273;
-% delta1_0=-0.1622;
-% delta2_0=-0.0279;
-% omega1_0=1;
-% omega2_0=1;
-% id1_0=-0.2080;
-% id2_0=-0.2672;
-% iq1_0=0.0325;
-% iq2_0=-0.0271;
-% v1_0=1;
-% v2_0=1;
-% v3_0=0.9905;
-% theta1_0=0;
-% theta2_0=-0.0014;
-% theta3_0=-0.0281;
-% efd1_0=0;
-% efd2_0=0;
-% tm1_0=0.2;
-% tm2_0=0.25;
+eq1_0=-0.1864;
+eq2_0=-0.3179;
+ed1_0=0.0217;
+ed2_0=0.0273;
+delta1_0=-0.1622;
+delta2_0=-0.0279;
+omega1_0=1;
+omega2_0=1;
+id1_0=-0.2080;
+id2_0=-0.2672;
+iq1_0=0.0325;
+iq2_0=-0.0271;
+v1_0=1;
+v2_0=1;
+v3_0=0.9905;
+theta1_0=0;
+theta2_0=-0.0014;
+theta3_0=-0.0281;
+efd1_0=0.3478;
+efd2_0=0.6202;
+tm1_0=0.0111;
+tm2_0=-0.0018;
 
 % Consistent Initial Conditions
 eq1_0=1.781266;
@@ -113,23 +113,76 @@ tm2_0=1.041792;
 x0=[eq1_0;eq2_0;ed1_0;ed2_0;delta1_0;delta2_0;omega1_0;omega2_0;id1_0;id2_0;iq1_0;iq2_0;v1_0;v2_0;v3_0;theta1_0;theta2_0;theta3_0;efd1_0;efd2_0;tm1_0;tm2_0];
 
 %Defining Function with 'states' as the input variable
-f=@(x)[-x(1)-(Xd1-Xd_dash1)*x(9)+x(19);
+f=@(x)[%-Eq1-(Xd1-Xd'1)*Id1+Efd1
+
+        -x(1)-(Xd1-Xd_dash1)*x(9)+x(19);
+
+        %-Eq2-(Xd2-Xd'2)*Id2+Efd2
+
        -x(2)-(Xd2-Xd_dash2)*x(10)+x(20);
+
+       %-Ed1+(Xq1-Xq'1)*Iq1
+
        -x(3)+(Xq1-Xq_dash1)*x(11);
+
+       %-Ed2+(Xq2-Xq'2)*Iq2
+
        -x(4)+(Xq2-Xq_dash2)*x(12);
+
+       %omega1-omega_ref
+
        x(7)-omega_ref;
+
+       %omega2-omega_ref
+
        x(8)-omega_ref;
+
+       %TM1-Ed1*Id1-Eq1*Iq1-(Xq'1-Xd'1)*Id1*Iq1-D1*(omega1-omega_ref)
+
        x(21)-x(3)*x(9)-x(1)*x(11)-(Xq_dash1-Xd_dash1)*x(9)*x(11)-D1*(x(7)-omega_ref);
+
+       %TM2-Ed2*Id2-Eq2*Iq2-(Xq'2-Xd'2)*Id2*Iq2-D2*(omega2-omega_ref);
+
        x(22)-x(4)*x(10)-x(2)*x(12)-(Xq_dash2-Xd_dash2)*x(10)*x(12)-D2*(x(8)-omega_ref);
+
+       %Ed1-V1*cos(theta1)*sin(delta1)+V1*sin(theta1)*cos(delta1)-Rs1*Id1+Xq'1*Iq1
+
        x(3)-x(13)*cos(x(16))*sin(x(5))+x(13)*sin(x(16))*cos(x(5))-Rs1*x(9)+Xq_dash1*x(11);
+
+       %Ed2-V2*cos(theta2)*sin(delta2)+V2*sin(theta2)*cos(delta2)-Rs2*Id2+Xq'2*Iq2
+
        x(4)-x(14)*cos(x(17))*sin(x(6))+x(14)*sin(x(17))*cos(x(6))-Rs2*x(10)+Xq_dash2*x(12);
+
+       %Eq1-V1*cos(theta1)*cos(delta1)-V1*sin(theta1)*sin(delta1)-Rs1*Iq1-Xd'1*Iq1;
+
        x(1)-x(13)*cos(x(16))*cos(x(5))-x(13)*sin(x(16))*sin(x(5))-Rs1*x(11)-Xd_dash1*x(9);
+
+       %Eq2-V2*cos(theta2)*cos(delta2)-V2*sin(theta2)*sin(delta2)-Rs2*Iq2-Xd'2*Iq2;
+
        x(2)-x(14)*cos(x(17))*cos(x(6))-x(14)*sin(x(17))*sin(x(6))-Rs2*x(12)-Xd_dash2*x(10);
+
+       %Id1*V1*sin(delta1-theta1)+Iq1*V1*cos(delta1-theta1)+P1-V1*V1*B11*sin(theta1-theta1)-V1*V2*B12*sin(theta1-theta2)-V1*V3*B13*sin(theta1-theta3);
+
        x(9)*x(13)*sin(x(5)-x(16))+x(11)*x(13)*cos(x(5)-x(16))+x(21)-x(13)*x(13)*B(1,1)*sin(x(16)-x(16))-x(13)*x(14)*B(1,2)*sin(x(16)-x(17))-x(13)*x(15)*B(1,3)*sin(x(16)-x(18));
+       
+       %Id2*V2*sin(delta2-theta2)+Iq2*V2*cos(delta2-theta2)+P2-V2*V1*B21*sin(theta2-theta1)-V2*V2*B22*sin(theta2-theta2)-V2*V3*B23*sin(theta2-theta3);
+       
        x(10)*x(14)*sin(x(6)-x(17))+x(12)*x(14)*cos(x(6)-x(17))+x(22)-x(14)*x(13)*B(2,1)*sin(x(17)-x(16))-x(14)*x(14)*B(2,2)*sin(x(17)-x(17))-x(14)*x(15)*B(2,3)*sin(x(17)-x(18));
-       x(21)+x(22)-x(15)*x(13)*B(3,1)*sin(x(18)-x(16))-x(15)*x(14)*B(3,2)*sin(x(18)-x(17))-x(15)*x(15)*B(3,3)*sin(x(18)-x(18));
+       
+       %P3-V3*V1*B31*sin(theta3-theta1)-V3*V2*B32*sin(theta3-theta2)-V3*V3*B33*sin(theta3-theta3);
+       
+       (x(21)+x(22))-x(15)*x(13)*B(3,1)*sin(x(18)-x(16))-x(15)*x(14)*B(3,2)*sin(x(18)-x(17))-x(15)*x(15)*B(3,3)*sin(x(18)-x(18));
+       
+       %Id1*V1*cos(delta1-theta1)-Iq1*V1*sin(delta1-theta1)+Q1-V1*V1*B11*cos(theta1-theta1)-V1*V2*B12*cos(theta1-theta2)-V1*V3*B13*cos(theta1-theta3);
+       
        x(9)*x(13)*cos(x(5)-x(16))-x(11)*x(13)*sin(x(5)-x(16))+Q1-x(13)*x(13)*B(1,1)*cos(x(16)-x(16))-x(13)*x(14)*B(1,2)*cos(x(16)-x(17))-x(13)*x(15)*B(1,3)*cos(x(16)-x(18));
+       
+       %Id2*V2*cos(delta2-theta2)-Iq2*V2*sin(delta2-theta2)+Q2-V2*V1*B21*cos(theta2-theta1)-V2*V2*B22*cos(theta2-theta2)-V2*V3*B23*cos(theta2-theta3);
+      
        x(10)*x(14)*cos(x(6)-x(17))-x(12)*x(14)*sin(x(6)-x(17))+Q2-x(14)*x(13)*B(2,1)*cos(x(17)-x(16))-x(14)*x(14)*B(2,2)*cos(x(17)-x(17))-x(14)*x(15)*B(2,3)*cos(x(17)-x(18));
+       
+       %Q2-V3*V1*B31*cos(theta3-theta1)-V3*V2*B32*cos(theta3-theta2)-V3*V3*B33*cos(theta3-theta3);
+      
        Q3-x(15)*x(13)*B(3,1)*cos(x(18)-x(16))-x(15)*x(14)*B(3,2)*cos(x(18)-x(17))-x(15)*x(15)*B(3,3)*cos(x(18)-x(18));
     ];
 
