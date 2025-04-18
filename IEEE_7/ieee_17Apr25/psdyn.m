@@ -4,8 +4,8 @@ function psd_dae=psdyn(x)
     omega_ref=1;
     
     %Field Axis Emf
-    Efd1=0.54;
-    Efd2=0.512;
+    Efd1=0.0409;
+    Efd2=0.5416;
     
     %Mechanical Power Input
     TM1=0.05;
@@ -51,13 +51,13 @@ function psd_dae=psdyn(x)
     B=[-0.25 0.1 0.15;0.1 -0.2 0.1;0.15 0.1 -0.25];
     
     %Active Power Demand
-    P1=0.05;
-    P2=0.4;
+    P1=0;
+    P2=0;
     P3=0.45;
 
     %Reactive Power Demand
-    Q1=0.0651;
-    Q2=0.0999;
+    Q1=0;
+    Q2=0;
     Q3=0.15;
 
 
