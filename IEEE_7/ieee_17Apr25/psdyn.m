@@ -4,8 +4,8 @@ function psd_dae=psdyn(x)
     omega_ref=1;
     
     %Field Axis Emf
-    Efd1=0.0409;
-    Efd2=0.5416;
+    Efd1=1.0592;
+    Efd2=1.2469;
     
     %Mechanical Power Input
     TM1=0.05;
